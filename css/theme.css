@@ -1,0 +1,23 @@
+:root {
+  --bg-black: #000000;
+  --bg-blue-glow: #0080FF;
+  --bg-gradient-mid: #021B3A;
+
+  --surface-primary: #111827;
+  --surface-secondary: #1E293B;
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #D9D9D9;
+  --text-muted: rgba(255, 255, 255, 0.54);
+
+  --color-gain: #34C759;
+  --color-loss: #FF3B30;
+
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-bg-soft: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-border-strong: rgba(255, 255, 255, 0.25);
+
+  --radius-card: 24px;
+  --radius-button: 32px;
+}

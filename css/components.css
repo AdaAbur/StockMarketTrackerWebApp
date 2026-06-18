@@ -1,0 +1,29 @@
+.glass-card {
+  background: linear-gradient(135deg, var(--glass-bg), var(--glass-bg-soft));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  padding: 1.25rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.glass-card-selected {
+  border-color: var(--glass-border-strong);
+}
+
+.glass-btn {
+  background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-button);
+  padding: 0.625rem 1.25rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s ease;
+}
+
+.glass-btn:hover {
+  background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.08));
+}
+
+.text-gain { color: var(--color-gain); }
+.text-loss { color: var(--color-loss); }
