@@ -12,6 +12,22 @@
   gap: 1rem;
 }
 
+.stat-card {
+  text-align: left;
+}
+
+.stat-label {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
