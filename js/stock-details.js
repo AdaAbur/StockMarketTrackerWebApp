@@ -58,4 +58,28 @@ document.addEventListener("DOMContentLoaded", () => {
       companyContainer.appendChild(row);
     });
   }
+
+  const watchlistBtn = document.querySelector("#watchlist-btn");
+  if (watchlistBtn) {
+    const getWatchlist = () =>
+      JSON.parse(localStorage.getItem("watchlist") || "[]");
+
+    const updateButton = () => {
+      const saved = getWatchlist().includes(stock.symbol);
+      watchlistBtn.textContent = saved ? "Remove from Watchlist" : "Add to Watchlist";
+    };
+
+    updateButton();
+
+    watchlistBtn.addEventListener("click", () => {
+      let list = getWatchlist();
+      if (list.includes(stock.symbol)) {
+        list = list.filter((item) => item !== stock.symbol);
+      } else {
+        list.push(stock.symbol);
+      }
+      localStorage.setItem("watchlist", JSON.stringify(list));
+      updateButton();
+    });
+  }
 });
