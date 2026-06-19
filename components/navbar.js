@@ -16,6 +16,11 @@ function createNavbar() {
   brand.href = "dashboard.html";
   brand.innerHTML = 'trade<span class="navbar-dot"></span>on';
 
+  const toggle = document.createElement("button");
+  toggle.className = "navbar-toggle";
+  toggle.setAttribute("aria-label", "Toggle menu");
+  toggle.innerHTML = "<span></span><span></span><span></span>";
+
   const links = document.createElement("div");
   links.className = "navbar-links";
 
@@ -32,7 +37,12 @@ function createNavbar() {
     links.appendChild(link);
   });
 
+  toggle.addEventListener("click", () => {
+    links.classList.toggle("open");
+  });
+
   nav.appendChild(brand);
+  nav.appendChild(toggle);
   nav.appendChild(links);
   return nav;
 }
