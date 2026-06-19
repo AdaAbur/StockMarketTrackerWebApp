@@ -5,3 +5,31 @@
 .portfolio-section {
   margin-bottom: 1.5rem;
 }
+
+.holding-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.holding-form input {
+  flex: 1;
+  min-width: 140px;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+}
+
+.holding-form input::placeholder {
+  color: var(--text-muted);
+}
+
+.form-feedback {
+  width: 100%;
+  margin: 0;
+  font-size: 0.875rem;
+}

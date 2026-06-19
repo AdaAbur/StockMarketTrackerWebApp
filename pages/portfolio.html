@@ -15,7 +15,13 @@
 
     <section class="portfolio-section glass-card">
       <h2 class="section-title">Add Holding</h2>
-      <!-- Add-holding form -->
+      <form class="holding-form" id="holding-form">
+        <input type="text" id="symbol" placeholder="Symbol (e.g. AAPL)" required />
+        <input type="number" id="shares" placeholder="Shares" min="0" step="any" required />
+        <input type="number" id="price" placeholder="Purchase price" min="0" step="any" required />
+        <button type="submit" class="glass-btn">Add</button>
+        <p class="form-feedback" id="form-feedback"></p>
+      </form>
     </section>
 
     <section class="portfolio-section">
@@ -25,5 +31,6 @@
   </main>
 
   <script src="../components/navbar.js"></script>
+  <script src="../js/portfolio.js"></script>
 </body>
 </html>
