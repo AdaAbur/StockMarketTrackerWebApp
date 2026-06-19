@@ -19,11 +19,16 @@ function createNavbar() {
   const links = document.createElement("div");
   links.className = "navbar-links";
 
+  const currentPage = window.location.pathname.split("/").pop();
+
   navLinks.forEach((item) => {
     const link = document.createElement("a");
     link.className = "navbar-link";
     link.href = item.href;
     link.textContent = item.label;
+    if (item.href === currentPage) {
+      link.classList.add("navbar-link-active");
+    }
     links.appendChild(link);
   });
 

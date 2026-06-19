@@ -32,9 +32,17 @@
 .navbar-link {
   color: var(--text-muted);
   font-size: 0.9375rem;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
 }
 
 .navbar-link:hover {
   color: var(--text-primary);
   opacity: 1;
+}
+
+.navbar-link-active {
+  color: var(--text-primary);
+  font-weight: 600;
+  border-bottom: 2px solid var(--bg-blue-glow);
 }
