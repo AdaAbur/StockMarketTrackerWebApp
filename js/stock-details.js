@@ -3,7 +3,15 @@ const stock = {
   name: "Apple Inc.",
   price: "$192.45",
   change: "+1.24%",
-  trend: "up"
+  trend: "up",
+  company: {
+    Sector: "Technology",
+    Industry: "Consumer Electronics",
+    CEO: "Tim Cook",
+    Headquarters: "Cupertino, CA",
+    Employees: "164,000",
+    "Market Cap": "$3.01T"
+  }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -30,4 +38,24 @@ document.addEventListener("DOMContentLoaded", () => {
   header.appendChild(nameEl);
   header.appendChild(priceEl);
   header.appendChild(changeEl);
+
+  const companyContainer = document.querySelector(".company-info");
+  if (companyContainer && stock.company) {
+    Object.entries(stock.company).forEach(([label, value]) => {
+      const row = document.createElement("div");
+      row.className = "company-row";
+
+      const labelEl = document.createElement("span");
+      labelEl.className = "company-label";
+      labelEl.textContent = label;
+
+      const valueEl = document.createElement("span");
+      valueEl.className = "company-value";
+      valueEl.textContent = value;
+
+      row.appendChild(labelEl);
+      row.appendChild(valueEl);
+      companyContainer.appendChild(row);
+    });
+  }
 });
