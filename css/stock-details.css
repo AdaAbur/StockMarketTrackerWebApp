@@ -1,0 +1,12 @@
+.stock-header {
+  margin-bottom: 1.5rem;
+}
+
+.stock-section {
+  margin-bottom: 1.5rem;
+}
+
+.stock-actions {
+  display: flex;
+  gap: 1rem;
+}
