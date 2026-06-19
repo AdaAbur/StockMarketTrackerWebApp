@@ -1,0 +1,44 @@
+.welcome {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 2rem 3rem;
+}
+
+.welcome-text {
+  text-align: left;
+}
+
+.welcome-brand {
+  display: flex;
+  align-items: flex-end;
+  font-size: 6.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.welcome-dot {
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--bg-blue-glow);
+  margin: 0 8px 14px;
+}
+
+.welcome-tagline {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+.welcome-btn {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 6rem);
+  transform: translate(-50%, -50%);
+  font-size: 1rem;
+  padding: 0.8rem 1.9rem;
+  white-space: nowrap;
+}
