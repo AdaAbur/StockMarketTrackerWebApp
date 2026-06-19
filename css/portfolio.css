@@ -6,6 +6,18 @@
   margin-bottom: 1.5rem;
 }
 
+.summary-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.summary-total {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
 .holding-form {
   display: flex;
   flex-wrap: wrap;

@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("#holding-form");
   const feedback = document.querySelector("#form-feedback");
   const holdingsList = document.querySelector(".holdings-list");
+  const summary = document.querySelector(".portfolio-summary");
 
   const getHoldings = () => JSON.parse(localStorage.getItem("holdings") || "[]");
   const saveHoldings = (list) => localStorage.setItem("holdings", JSON.stringify(list));
@@ -19,7 +20,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const getCurrentPrice = (symbol, fallback) =>
     currentPrices[symbol] !== undefined ? currentPrices[symbol] : fallback;
 
+  const renderSummary = () => {
+    const holdings = getHoldings();
+    let total = 0;
+    holdings.forEach((holding) => {
+      total += holding.shares * getCurrentPrice(holding.symbol, holding.price);
+    });
+    summary.innerHTML =
+      '<p class="summary-label">Total Portfolio Value</p>' +
+      '<p class="summary-total">$' + total.toFixed(2) + "</p>";
+  };
+
   const renderHoldings = () => {
+    renderSummary();
     const holdings = getHoldings();
     holdingsList.innerHTML = "";
 
