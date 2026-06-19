@@ -1,3 +1,12 @@
+const navLinks = [
+  { label: "Dashboard", href: "dashboard.html" },
+  { label: "Stock Search", href: "stock-details.html" },
+  { label: "Watchlist", href: "#" },
+  { label: "Portfolio", href: "portfolio.html" },
+  { label: "Settings", href: "#" },
+  { label: "Logout", href: "#" }
+];
+
 function createNavbar() {
   const nav = document.createElement("nav");
   nav.className = "navbar";
@@ -9,6 +18,14 @@ function createNavbar() {
 
   const links = document.createElement("div");
   links.className = "navbar-links";
+
+  navLinks.forEach((item) => {
+    const link = document.createElement("a");
+    link.className = "navbar-link";
+    link.href = item.href;
+    link.textContent = item.label;
+    links.appendChild(link);
+  });
 
   nav.appendChild(brand);
   nav.appendChild(links);
