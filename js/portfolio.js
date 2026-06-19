@@ -44,6 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
     holdings.forEach((holding) => {
       const currentPrice = getCurrentPrice(holding.symbol, holding.price);
       const currentValue = holding.shares * currentPrice;
+      const profitLoss = (currentPrice - holding.price) * holding.shares;
+      const plClass = profitLoss >= 0 ? "text-gain" : "text-loss";
+      const plSign = profitLoss >= 0 ? "+" : "";
 
       const card = document.createElement("div");
       card.className = "glass-card holding-card";
@@ -56,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
           "<span>Shares: " + holding.shares + "</span>" +
           "<span>Buy: $" + holding.price.toFixed(2) + "</span>" +
           "<span>Now: $" + currentPrice.toFixed(2) + "</span>" +
+          '<span class="' + plClass + '">P/L: ' + plSign + "$" + profitLoss.toFixed(2) + "</span>" +
         "</div>";
 
       holdingsList.appendChild(card);
