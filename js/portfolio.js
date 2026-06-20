@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    holdings.forEach((holding) => {
+    holdings.forEach((holding, index) => {
       const currentPrice = getCurrentPrice(holding.symbol, holding.price);
       const currentValue = holding.shares * currentPrice;
       const profitLoss = (currentPrice - holding.price) * holding.shares;
@@ -61,6 +61,17 @@ document.addEventListener("DOMContentLoaded", () => {
           "<span>Now: $" + currentPrice.toFixed(2) + "</span>" +
           '<span class="' + plClass + '">P/L: ' + plSign + "$" + profitLoss.toFixed(2) + "</span>" +
         "</div>";
+
+      const sellBtn = document.createElement("button");
+      sellBtn.className = "glass-btn sell-btn";
+      sellBtn.textContent = "Sell";
+      sellBtn.addEventListener("click", () => {
+        const list = getHoldings();
+        list.splice(index, 1);
+        saveHoldings(list);
+        renderHoldings();
+      });
+      card.appendChild(sellBtn);
 
       holdingsList.appendChild(card);
     });
