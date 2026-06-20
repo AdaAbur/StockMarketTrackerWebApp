@@ -1,9 +1,9 @@
 const navLinks = [
   { label: "Dashboard", href: "dashboard.html" },
-  { label: "Stock Search", href: "stock-details.html" },
+  { label: "Stock Search", href: "stock-search.html" },
   { label: "Watchlist", href: "#" },
   { label: "Portfolio", href: "portfolio.html" },
-  { label: "Settings", href: "#" },
+  { label: "Profile", href: "#" },
   { label: "Logout", href: "#" }
 ];
 
