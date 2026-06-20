@@ -19,7 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     list.forEach((stock) => {
-      results.appendChild(createStockRow({ ...stock, href: "stock-details.html" }));
+      results.appendChild(
+        createStockRow({ ...stock, href: "stock-details.html?symbol=" + stock.symbol })
+      );
     });
   };
 
