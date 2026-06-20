@@ -1,5 +1,4 @@
 .welcome {
-  position: relative;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -12,19 +11,21 @@
 
 .welcome-brand {
   display: flex;
-  align-items: flex-end;
-  font-size: 6.5rem;
+  align-items: center;
+  font-size: 8rem;
   font-weight: 700;
   color: var(--text-primary);
 }
 
 .welcome-dot {
   display: inline-block;
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: var(--bg-blue-glow);
-  margin: 0 8px 14px;
+  margin: 0 10px;
+  position: relative;
+  top: 2.5rem;
 }
 
 .welcome-tagline {
@@ -34,10 +35,8 @@
 }
 
 .welcome-btn {
-  position: absolute;
-  left: 50%;
-  top: calc(50% + 6rem);
-  transform: translate(-50%, -50%);
+  display: inline-block;
+  margin-top: 1.5rem;
   font-size: 1rem;
   padding: 0.8rem 1.9rem;
   white-space: nowrap;
