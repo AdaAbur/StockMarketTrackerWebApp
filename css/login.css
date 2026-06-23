@@ -88,3 +88,10 @@
 .auth-switch a {
   color: var(--bg-blue-glow);
 }
+
+.auth-feedback {
+  color: var(--color-loss);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  min-height: 1rem;
+}
