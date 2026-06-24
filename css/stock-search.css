@@ -58,3 +58,9 @@
 .stock-change {
   font-size: 0.8125rem;
 }
+
+.search-message {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+}
