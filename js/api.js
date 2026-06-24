@@ -25,16 +25,22 @@ async function apiRequest(endpoint, params) {
   return data;
 }
 
+function normalizeQuote(item) {
+  const change = parseFloat(item.percent_change);
+  return {
+    symbol: item.symbol,
+    name: item.name,
+    price: formatMoney(item.close),
+    change: (change >= 0 ? "+" : "") + change.toFixed(2) + "%",
+    trend: change >= 0 ? "up" : "down"
+  };
+}
+
 async function fetchQuote(symbol) {
   const data = await apiRequest("/quote", { symbol: symbol });
-  const change = parseFloat(data.percent_change);
   const fiftyTwo = data.fifty_two_week || {};
   return {
-    symbol: data.symbol,
-    name: data.name,
-    price: formatMoney(data.close),
-    change: (change >= 0 ? "+" : "") + change.toFixed(2) + "%",
-    trend: change >= 0 ? "up" : "down",
+    ...normalizeQuote(data),
     details: {
       Exchange: data.exchange || "-",
       Currency: data.currency || "-",
@@ -47,6 +53,16 @@ async function fetchQuote(symbol) {
       "52-Week Low": formatMoney(fiftyTwo.low)
     }
   };
+}
+
+async function fetchQuotes(symbols) {
+  if (symbols.length === 0) return [];
+  const data = await apiRequest("/quote", { symbol: symbols.join(",") });
+  const items = symbols.length === 1 ? { [symbols[0]]: data } : data;
+  return symbols
+    .map((symbol) => items[symbol])
+    .filter((item) => item && item.symbol)
+    .map((item) => normalizeQuote(item));
 }
 
 async function searchSymbols(query) {
