@@ -2,6 +2,12 @@
   margin-bottom: 1.5rem;
 }
 
+.dashboard-location {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
 .dashboard-section {
   margin-bottom: 2rem;
 }

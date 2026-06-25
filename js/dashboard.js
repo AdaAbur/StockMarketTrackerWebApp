@@ -88,11 +88,26 @@ async function renderWatchlist(container) {
   }
 }
 
+function loadLocation() {
+  const locationEl = document.querySelector("#dashboard-location");
+  if (!locationEl) return;
+
+  detectLocation((result) => {
+    if (result && result.country) {
+      const place = result.city ? result.city + ", " + result.country : result.country;
+      locationEl.textContent = "Markets near you: " + place;
+    } else {
+      locationEl.textContent = "Location unavailable";
+    }
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const summaryContainer = document.querySelector(".summary-cards");
   const watchlistContainer = document.querySelector(".watchlist-preview");
   const overviewContainer = document.querySelector(".stock-overview");
 
+  loadLocation();
   loadOverview(overviewContainer, summaryContainer);
   renderWatchlist(watchlistContainer);
 });
