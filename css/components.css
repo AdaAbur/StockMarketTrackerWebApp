@@ -27,3 +27,54 @@
 
 .text-gain { color: var(--color-gain); }
 .text-loss { color: var(--color-loss); }
+
+.error-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: rgba(255, 59, 48, 0.10);
+  border: 1px solid rgba(255, 59, 48, 0.35);
+  border-radius: 0.85rem;
+  padding: 0.9rem 1.1rem;
+}
+
+.error-icon {
+  flex-shrink: 0;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: var(--color-loss);
+  color: #ffffff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.error-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.error-text {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.error-retry {
+  align-self: flex-start;
+  background: rgba(255, 59, 48, 0.15);
+  border: 1px solid rgba(255, 59, 48, 0.4);
+  color: var(--color-loss);
+  border-radius: 0.6rem;
+  padding: 0.35rem 0.85rem;
+  cursor: pointer;
+  font-size: 0.8125rem;
+}
+
+.error-retry:hover {
+  background: rgba(255, 59, 48, 0.25);
+}
