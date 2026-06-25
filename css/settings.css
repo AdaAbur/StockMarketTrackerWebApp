@@ -1,0 +1,40 @@
+.settings-section {
+  margin-bottom: 1.5rem;
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.75rem;
+}
+
+.settings-label {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+.settings-input {
+  padding: 0.7rem 1rem;
+  margin-bottom: 1.1rem;
+  border-radius: 0.85rem;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.settings-input::placeholder {
+  color: var(--text-muted);
+}
+
+.settings-btn {
+  align-self: flex-start;
+  padding: 0.6rem 1.4rem;
+}
+
+.settings-feedback {
+  font-size: 0.85rem;
+  margin-top: 0.6rem;
+  min-height: 1rem;
+}
