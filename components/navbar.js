@@ -3,9 +3,17 @@ const navLinks = [
   { label: "Stock Search", href: "stock-search.html" },
   { label: "Watchlist", href: "watchlist.html" },
   { label: "Portfolio", href: "portfolio.html" },
-  { label: "Profile", href: "#" },
+  { label: "Profile", href: "settings.html" },
   { label: "Logout", href: "#" }
 ];
+
+function applyTheme(theme) {
+  if (theme === "light") {
+    document.body.classList.add("light");
+  } else {
+    document.body.classList.remove("light");
+  }
+}
 
 function createNavbar() {
   const nav = document.createElement("nav");
@@ -48,5 +56,6 @@ function createNavbar() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  applyTheme(localStorage.getItem("theme") || "dark");
   document.body.insertAdjacentElement("afterbegin", createNavbar());
 });

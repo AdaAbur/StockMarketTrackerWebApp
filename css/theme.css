@@ -21,3 +21,17 @@
   --radius-card: 24px;
   --radius-button: 32px;
 }
+
+body.light {
+  --bg-black: #eef2f8;
+  --bg-gradient-mid: #bcd4f0;
+
+  --text-primary: #0b1220;
+  --text-secondary: #243044;
+  --text-muted: rgba(0, 0, 0, 0.55);
+
+  --glass-bg: rgba(0, 0, 0, 0.04);
+  --glass-bg-soft: rgba(0, 0, 0, 0.02);
+  --glass-border: rgba(0, 0, 0, 0.10);
+  --glass-border-strong: rgba(0, 0, 0, 0.22);
+}
