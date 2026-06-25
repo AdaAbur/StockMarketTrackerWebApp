@@ -34,7 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       render(list.slice(0, 20));
     } catch (error) {
-      setMessage(error.message);
+      results.innerHTML = "";
+      results.appendChild(createErrorMessage(error.message, () => search(query)));
     }
   };
 

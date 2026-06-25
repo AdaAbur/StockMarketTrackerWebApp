@@ -88,7 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
       container.innerHTML = "";
       stocks.forEach((stock) => container.appendChild(createCard(stock)));
     } catch (error) {
-      showMessage(error.message, false);
+      container.innerHTML = "";
+      container.appendChild(createErrorMessage(error.message, load));
     }
   };
 
