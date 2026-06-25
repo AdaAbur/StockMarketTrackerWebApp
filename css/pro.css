@@ -1,0 +1,43 @@
+.pro-card {
+  background: linear-gradient(135deg, var(--glass-bg), var(--glass-bg-soft));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  color: var(--text-primary);
+}
+
+.pro-card-featured {
+  border-color: var(--bg-blue-glow);
+  box-shadow: 0 8px 30px rgba(0, 128, 255, 0.25);
+}
+
+.pro-price {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0.5rem 0 1rem;
+}
+
+.pro-price span {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.pro-features {
+  margin-bottom: 1.5rem;
+}
+
+.pro-features li {
+  color: var(--text-secondary);
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.pro-features li:last-child {
+  border-bottom: none;
+}
+
+.pro-badge {
+  background: var(--bg-blue-glow);
+  color: #ffffff;
+}

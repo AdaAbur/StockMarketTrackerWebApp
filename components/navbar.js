@@ -3,6 +3,7 @@ const navLinks = [
   { label: "Stock Search", href: "stock-search.html" },
   { label: "Watchlist", href: "watchlist.html" },
   { label: "Portfolio", href: "portfolio.html" },
+  { label: "Pro", href: "pro.html" },
   { label: "Profile", href: "settings.html" },
   { label: "Logout", href: "#" }
 ];
