@@ -49,6 +49,18 @@ document.addEventListener("DOMContentLoaded", () => {
     passwordFeedback.className = "settings-feedback text-gain";
   });
 
+  const currencySelect = document.querySelector("#currency-select");
+  const currencyFeedback = document.querySelector("#currency-feedback");
+  currencySelect.value = getCurrency();
+  loadCurrencyRates();
+
+  currencySelect.addEventListener("change", async () => {
+    setCurrency(currencySelect.value);
+    await loadCurrencyRates();
+    currencyFeedback.textContent = "Currency updated. Prices will show in " + currencySelect.value + ".";
+    currencyFeedback.className = "settings-feedback text-gain";
+  });
+
   const themeSelect = document.querySelector("#theme-select");
   themeSelect.value = localStorage.getItem("theme") || "dark";
   themeSelect.addEventListener("change", () => {

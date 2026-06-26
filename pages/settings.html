@@ -43,6 +43,20 @@
     </section>
 
     <section class="glass-card settings-section">
+      <h2 class="section-title">Currency</h2>
+      <div class="settings-form">
+        <label class="settings-label" for="currency-select">Display Currency</label>
+        <select id="currency-select" class="settings-input">
+          <option value="USD">USD ($)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="TRY">TRY (₺)</option>
+        </select>
+        <p id="currency-feedback" class="settings-feedback"></p>
+      </div>
+    </section>
+
+    <section class="glass-card settings-section">
       <h2 class="section-title">Theme</h2>
       <div class="settings-form">
         <label class="settings-label" for="theme-select">Appearance</label>
@@ -55,6 +69,8 @@
   </main>
 
   <script src="../components/navbar.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
   <script src="../js/settings.js"></script>
 </body>
 </html>

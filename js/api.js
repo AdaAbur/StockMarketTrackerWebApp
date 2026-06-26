@@ -1,6 +1,50 @@
+const CURRENCIES = { USD: "$", EUR: "€", GBP: "£", TRY: "₺" };
+
+let currencyRates = { USD: 1 };
+
+(function () {
+  try {
+    const cached = JSON.parse(localStorage.getItem("currencyRates") || "null");
+    if (cached && cached.USD) {
+      currencyRates = cached;
+    }
+  } catch (error) {
+    currencyRates = { USD: 1 };
+  }
+})();
+
+function getCurrency() {
+  return localStorage.getItem("currency") || "USD";
+}
+
+function setCurrency(code) {
+  localStorage.setItem("currency", code);
+}
+
+function currencySymbol() {
+  return CURRENCIES[getCurrency()] || "$";
+}
+
+function convertFromUsd(amount) {
+  const rate = currencyRates[getCurrency()] || 1;
+  return amount * rate;
+}
+
+async function loadCurrencyRates() {
+  try {
+    const response = await fetch("https://open.er-api.com/v6/latest/USD");
+    const data = await response.json();
+    if (data && data.rates) {
+      currencyRates = data.rates;
+      localStorage.setItem("currencyRates", JSON.stringify(data.rates));
+    }
+  } catch (error) {}
+}
+
 function formatMoney(value) {
   const number = parseFloat(value);
-  return isNaN(number) ? "-" : "$" + number.toFixed(2);
+  if (isNaN(number)) return "-";
+  return currencySymbol() + convertFromUsd(number).toFixed(2);
 }
 
 function formatNumber(value) {
