@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const input = document.querySelector("#stock-search-input");
+  const countrySelect = document.querySelector("#country-select");
   const results = document.querySelector(".stock-results");
   let timer;
 
@@ -28,24 +29,36 @@ document.addEventListener("DOMContentLoaded", () => {
     setMessage("Searching...");
     try {
       const list = await searchSymbols(query);
-      if (list.length === 0) {
+      const country = countrySelect.value;
+      const filtered = country ? list.filter((item) => item.country === country) : list;
+      if (filtered.length === 0) {
         setMessage("No stocks found.");
         return;
       }
-      render(list.slice(0, 20));
+      render(filtered.slice(0, 20));
     } catch (error) {
       results.innerHTML = "";
       results.appendChild(createErrorMessage(error.message, () => search(query)));
     }
   };
 
-  input.addEventListener("input", () => {
+  const triggerSearch = () => {
     const query = input.value.trim();
-    clearTimeout(timer);
     if (query === "") {
       results.innerHTML = "";
       return;
     }
-    timer = setTimeout(() => search(query), 400);
+    search(query);
+  };
+
+  input.addEventListener("input", () => {
+    clearTimeout(timer);
+    if (input.value.trim() === "") {
+      results.innerHTML = "";
+      return;
+    }
+    timer = setTimeout(triggerSearch, 400);
   });
+
+  countrySelect.addEventListener("change", triggerSearch);
 });

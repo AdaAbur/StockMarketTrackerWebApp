@@ -113,7 +113,9 @@ async function searchSymbols(query) {
   const data = await apiRequest("/symbol_search", { symbol: query });
   return (data.data || []).map((item) => ({
     symbol: item.symbol,
-    name: item.instrument_name
+    name: item.instrument_name,
+    country: item.country || "",
+    exchange: item.exchange || ""
   }));
 }
 

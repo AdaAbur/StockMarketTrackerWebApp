@@ -1,7 +1,7 @@
 .search-bar {
   width: 100%;
   padding: 0.85rem 1rem;
-  margin: 1rem 0 1.5rem;
+  margin: 1rem 0 0.75rem;
   border-radius: 1rem;
   border: 1px solid var(--glass-border);
   background: rgba(255, 255, 255, 0.05);
@@ -11,6 +11,17 @@
 
 .search-bar::placeholder {
   color: var(--text-muted);
+}
+
+.country-select {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  font-size: 0.95rem;
 }
 
 .stock-results {
