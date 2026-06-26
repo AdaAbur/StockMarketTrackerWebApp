@@ -5,6 +5,19 @@ const rangeConfig = {
   "1Y": { interval: "1day", outputsize: 252 }
 };
 
+const chartBackground = {
+  id: "chartBackground",
+  beforeDraw: (c) => {
+    const area = c.chartArea;
+    if (!area) return;
+    const ctx = c.ctx;
+    ctx.save();
+    ctx.fillStyle = "#0a1018";
+    ctx.fillRect(area.left, area.top, area.right - area.left, area.bottom - area.top);
+    ctx.restore();
+  }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.querySelector("#price-chart");
   const wrapper = document.querySelector(".chart-wrapper");
@@ -31,7 +44,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const drawChart = (series) => {
     const up = series.prices[series.prices.length - 1] >= series.prices[0];
     const color = up ? "#34C759" : "#FF3B30";
-    const fill = up ? "rgba(52, 199, 89, 0.15)" : "rgba(255, 59, 48, 0.15)";
+    const rgb = up ? "52, 199, 89" : "255, 59, 48";
+
+    const height = wrapper.clientHeight || 280;
+    const ctx = canvas.getContext("2d");
+    const gradient = ctx.createLinearGradient(0, 0, 0, height);
+    gradient.addColorStop(0, "rgba(" + rgb + ", 0.4)");
+    gradient.addColorStop(1, "rgba(" + rgb + ", 0)");
 
     if (chart) chart.destroy();
     chart = new Chart(canvas, {
@@ -41,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
         datasets: [{
           data: series.prices,
           borderColor: color,
-          backgroundColor: fill,
+          backgroundColor: gradient,
           fill: true,
           tension: 0.3,
           pointRadius: 0,
@@ -59,7 +78,8 @@ document.addEventListener("DOMContentLoaded", () => {
             grid: { color: "rgba(255, 255, 255, 0.08)" }
           }
         }
-      }
+      },
+      plugins: [chartBackground]
     });
   };
 
