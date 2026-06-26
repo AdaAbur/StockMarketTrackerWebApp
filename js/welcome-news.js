@@ -10,12 +10,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     const items = await fetchNews();
     container.innerHTML = "";
-    items.slice(0, 5).forEach((item) => {
+    items.slice(0, 10).forEach((item) => {
       const card = document.createElement("a");
       card.className = "welcome-news-item";
       card.href = item.url;
       card.target = "_blank";
       card.rel = "noopener";
+
+      if (item.image) {
+        const thumb = document.createElement("img");
+        thumb.className = "welcome-news-thumb";
+        thumb.src = item.image;
+        thumb.alt = "";
+        card.appendChild(thumb);
+      }
+
+      const body = document.createElement("div");
+      body.className = "welcome-news-body";
 
       const headline = document.createElement("p");
       headline.className = "welcome-news-headline";
@@ -25,8 +36,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       source.className = "welcome-news-source";
       source.textContent = item.source;
 
-      card.appendChild(headline);
-      card.appendChild(source);
+      body.appendChild(headline);
+      body.appendChild(source);
+      card.appendChild(body);
       container.appendChild(card);
     });
   } catch (error) {
