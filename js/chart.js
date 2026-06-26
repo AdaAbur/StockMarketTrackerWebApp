@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const drawChart = (series) => {
     const up = series.prices[series.prices.length - 1] >= series.prices[0];
     const color = up ? "#34C759" : "#FF3B30";
+    const fill = up ? "rgba(52, 199, 89, 0.15)" : "rgba(255, 59, 48, 0.15)";
 
     if (chart) chart.destroy();
     chart = new Chart(canvas, {
@@ -40,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
         datasets: [{
           data: series.prices,
           borderColor: color,
-          backgroundColor: "rgba(0, 128, 255, 0.08)",
+          backgroundColor: fill,
           fill: true,
           tension: 0.3,
           pointRadius: 0,
