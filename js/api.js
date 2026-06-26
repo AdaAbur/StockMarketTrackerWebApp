@@ -85,3 +85,27 @@ async function fetchTimeSeries(symbol, interval, outputsize) {
     prices: values.map((item) => parseFloat(item.close))
   };
 }
+
+async function fetchNews() {
+  const url = API_CONFIG.newsUrl + "/news?category=general&token=" + API_CONFIG.newsKey;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Network error. Please try again.");
+  }
+
+  const data = await response.json();
+  if (!Array.isArray(data)) {
+    throw new Error("Could not load news.");
+  }
+
+  return data.slice(0, 20).map((item) => {
+    const summary = item.summary || "";
+    return {
+      headline: item.headline,
+      summary: summary.length > 180 ? summary.slice(0, 180) + "…" : summary,
+      source: item.source,
+      url: item.url,
+      image: item.image
+    };
+  });
+}

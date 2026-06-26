@@ -1,6 +1,7 @@
 const navLinks = [
   { label: "Dashboard", href: "dashboard.html" },
   { label: "Stock Search", href: "stock-search.html" },
+  { label: "News", href: "news.html" },
   { label: "Watchlist", href: "watchlist.html" },
   { label: "Portfolio", href: "portfolio.html" },
   { label: "Pro", href: "pro.html" },
