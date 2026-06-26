@@ -91,6 +91,13 @@
   font-size: 0.8125rem;
 }
 
+.sparkline {
+  width: 100px;
+  height: 32px;
+  flex-shrink: 0;
+  margin: 0 0.75rem;
+}
+
 .watchlist-link {
   margin-top: 0.75rem;
   font-size: 0.875rem;

@@ -31,9 +31,9 @@ async function loadOverview(container, summaryContainer) {
     const overview = await fetchQuotes(popularStocks);
     container.innerHTML = "";
     overview.forEach((stock) => {
-      container.appendChild(
-        createStockRow({ ...stock, href: "stock-details.html?symbol=" + stock.symbol })
-      );
+      const row = createStockRow({ ...stock, href: "stock-details.html?symbol=" + stock.symbol });
+      row.insertBefore(createSparkline(stock.symbol), row.lastChild);
+      container.appendChild(row);
     });
     renderSummary(summaryContainer, overview);
   } catch (error) {
