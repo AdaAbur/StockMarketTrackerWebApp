@@ -13,15 +13,59 @@
   color: var(--text-muted);
 }
 
-.country-select {
-  width: 100%;
-  padding: 0.7rem 1rem;
+.country-dropdown {
+  position: relative;
   margin-bottom: 1.5rem;
+}
+
+.country-toggle {
+  width: 100%;
+  text-align: left;
+  padding: 0.7rem 1rem;
   border-radius: 1rem;
   border: 1px solid var(--glass-border);
   background: rgba(255, 255, 255, 0.05);
   color: var(--text-primary);
   font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.country-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: linear-gradient(135deg, rgba(20, 28, 44, 0.92), rgba(10, 16, 28, 0.92));
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 1rem;
+  padding: 0.4rem;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.country-menu.open {
+  display: block;
+}
+
+.country-option {
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.6rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.country-option:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+}
+
+.country-option-active {
+  color: var(--text-primary);
+  background: rgba(0, 128, 255, 0.15);
 }
 
 .stock-results {

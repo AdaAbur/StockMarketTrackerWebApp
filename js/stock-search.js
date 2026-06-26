@@ -1,8 +1,23 @@
+const countries = [
+  { value: "", label: "All countries" },
+  { value: "United States", label: "United States" },
+  { value: "United Kingdom", label: "United Kingdom" },
+  { value: "Germany", label: "Germany" },
+  { value: "France", label: "France" },
+  { value: "Turkey", label: "Turkey" },
+  { value: "Japan", label: "Japan" },
+  { value: "Canada", label: "Canada" },
+  { value: "India", label: "India" }
+];
+
 document.addEventListener("DOMContentLoaded", () => {
   const input = document.querySelector("#stock-search-input");
-  const countrySelect = document.querySelector("#country-select");
   const results = document.querySelector(".stock-results");
+  const dropdown = document.querySelector("#country-dropdown");
+  const toggle = document.querySelector("#country-toggle");
+  const menu = document.querySelector("#country-menu");
   let timer;
+  let selectedCountry = "";
 
   const setMessage = (text) => {
     results.innerHTML = "";
@@ -29,8 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
     setMessage("Searching...");
     try {
       const list = await searchSymbols(query);
-      const country = countrySelect.value;
-      const filtered = country ? list.filter((item) => item.country === country) : list;
+      const filtered = selectedCountry
+        ? list.filter((item) => item.country === selectedCountry)
+        : list;
       if (filtered.length === 0) {
         setMessage("No stocks found.");
         return;
@@ -51,6 +67,32 @@ document.addEventListener("DOMContentLoaded", () => {
     search(query);
   };
 
+  countries.forEach((country) => {
+    const option = document.createElement("div");
+    option.className = "country-option";
+    if (country.value === selectedCountry) option.classList.add("country-option-active");
+    option.textContent = country.label;
+    option.addEventListener("click", () => {
+      selectedCountry = country.value;
+      toggle.textContent = country.label;
+      menu.querySelectorAll(".country-option").forEach((el) => el.classList.remove("country-option-active"));
+      option.classList.add("country-option-active");
+      menu.classList.remove("open");
+      triggerSearch();
+    });
+    menu.appendChild(option);
+  });
+
+  toggle.addEventListener("click", () => {
+    menu.classList.toggle("open");
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!dropdown.contains(event.target)) {
+      menu.classList.remove("open");
+    }
+  });
+
   input.addEventListener("input", () => {
     clearTimeout(timer);
     if (input.value.trim() === "") {
@@ -59,6 +101,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     timer = setTimeout(triggerSearch, 400);
   });
-
-  countrySelect.addEventListener("change", triggerSearch);
 });

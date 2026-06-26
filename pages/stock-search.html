@@ -11,17 +11,10 @@
   <main class="page">
     <h1>Stocks</h1>
     <input type="text" id="stock-search-input" class="search-bar" placeholder="Search stocks..." />
-    <select id="country-select" class="country-select">
-      <option value="">All countries</option>
-      <option value="United States">United States</option>
-      <option value="United Kingdom">United Kingdom</option>
-      <option value="Germany">Germany</option>
-      <option value="France">France</option>
-      <option value="Turkey">Turkey</option>
-      <option value="Japan">Japan</option>
-      <option value="Canada">Canada</option>
-      <option value="India">India</option>
-    </select>
+    <div class="country-dropdown" id="country-dropdown">
+      <button type="button" class="country-toggle" id="country-toggle">All countries</button>
+      <div class="country-menu" id="country-menu"></div>
+    </div>
     <div class="stock-results"></div>
   </main>
 
