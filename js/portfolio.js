@@ -1,50 +1,45 @@
-const currentPrices = {
-  AAPL: 192.45,
-  TSLA: 251.30,
-  NVDA: 487.20,
-  MSFT: 379.05,
-  AMZN: 244.35,
-  META: 577.22,
-  GOOGL: 367.99
-};
-
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.querySelector("#holding-form");
-  const feedback = document.querySelector("#form-feedback");
   const holdingsList = document.querySelector(".holdings-list");
   const summary = document.querySelector(".portfolio-summary");
 
   const getHoldings = () => JSON.parse(localStorage.getItem("holdings") || "[]");
   const saveHoldings = (list) => localStorage.setItem("holdings", JSON.stringify(list));
+  const parsePrice = (text) => parseFloat(String(text).replace(/[^0-9.]/g, ""));
 
-  const getCurrentPrice = (symbol, fallback) =>
-    currentPrices[symbol] !== undefined ? currentPrices[symbol] : fallback;
-
-  const renderSummary = () => {
-    const holdings = getHoldings();
-    let total = 0;
-    holdings.forEach((holding) => {
-      total += holding.shares * getCurrentPrice(holding.symbol, holding.price);
-    });
+  const renderSummary = (total) => {
     summary.innerHTML =
       '<p class="summary-label">Total Portfolio Value</p>' +
-      '<p class="summary-total">$' + total.toFixed(2) + "</p>";
+      '<p class="summary-total">' + currencySymbol() + total.toFixed(2) + "</p>";
   };
 
-  const renderHoldings = () => {
-    renderSummary();
+  const render = async () => {
     const holdings = getHoldings();
-    holdingsList.innerHTML = "";
 
     if (holdings.length === 0) {
-      holdingsList.innerHTML = "<p>No holdings yet. Add one above.</p>";
+      renderSummary(0);
+      holdingsList.innerHTML = "<p>No holdings yet. Buy stocks from their detail page.</p>";
       return;
     }
 
+    holdingsList.innerHTML = "<p>Loading...</p>";
+
+    const prices = {};
+    try {
+      const quotes = await fetchQuotes(holdings.map((h) => h.symbol));
+      quotes.forEach((q) => {
+        prices[q.symbol] = parsePrice(q.price);
+      });
+    } catch (error) {}
+
+    let total = 0;
+    holdingsList.innerHTML = "";
+    const sym = currencySymbol();
+
     holdings.forEach((holding, index) => {
-      const currentPrice = getCurrentPrice(holding.symbol, holding.price);
-      const currentValue = holding.shares * currentPrice;
-      const profitLoss = (currentPrice - holding.price) * holding.shares;
+      const now = prices[holding.symbol] !== undefined ? prices[holding.symbol] : holding.price;
+      const value = holding.shares * now;
+      const profitLoss = (now - holding.price) * holding.shares;
+      total += value;
       const plClass = profitLoss >= 0 ? "text-gain" : "text-loss";
       const plSign = profitLoss >= 0 ? "+" : "";
 
@@ -53,13 +48,13 @@ document.addEventListener("DOMContentLoaded", () => {
       card.innerHTML =
         '<div class="holding-top">' +
           '<span class="holding-symbol">' + holding.symbol + "</span>" +
-          '<span class="holding-value">$' + currentValue.toFixed(2) + "</span>" +
+          '<span class="holding-value">' + sym + value.toFixed(2) + "</span>" +
         "</div>" +
         '<div class="holding-details">' +
           "<span>Shares: " + holding.shares + "</span>" +
-          "<span>Buy: $" + holding.price.toFixed(2) + "</span>" +
-          "<span>Now: $" + currentPrice.toFixed(2) + "</span>" +
-          '<span class="' + plClass + '">P/L: ' + plSign + "$" + profitLoss.toFixed(2) + "</span>" +
+          "<span>Buy: " + sym + holding.price.toFixed(2) + "</span>" +
+          "<span>Now: " + sym + now.toFixed(2) + "</span>" +
+          '<span class="' + plClass + '">P/L: ' + plSign + sym + profitLoss.toFixed(2) + "</span>" +
         "</div>";
 
       const sellBtn = document.createElement("button");
@@ -69,36 +64,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const list = getHoldings();
         list.splice(index, 1);
         saveHoldings(list);
-        renderHoldings();
+        render();
       });
       card.appendChild(sellBtn);
 
       holdingsList.appendChild(card);
     });
+
+    renderSummary(total);
   };
 
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const symbol = document.querySelector("#symbol").value.trim().toUpperCase();
-    const shares = parseFloat(document.querySelector("#shares").value);
-    const price = parseFloat(document.querySelector("#price").value);
-
-    if (!symbol || isNaN(shares) || isNaN(price) || shares <= 0 || price <= 0) {
-      feedback.textContent = "Please enter a valid symbol, shares > 0 and price > 0.";
-      feedback.className = "form-feedback text-loss";
-      return;
-    }
-
-    const holdings = getHoldings();
-    holdings.push({ symbol, shares, price });
-    saveHoldings(holdings);
-
-    feedback.textContent = symbol + " added to your portfolio.";
-    feedback.className = "form-feedback text-gain";
-    form.reset();
-    renderHoldings();
-  });
-
-  renderHoldings();
+  render();
 });

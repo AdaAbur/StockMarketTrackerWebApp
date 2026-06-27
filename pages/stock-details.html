@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tradeon - Stock Details</title>
   <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/stock-details.css?v=2" />
+  <link rel="stylesheet" href="../css/stock-details.css?v=3" />
 </head>
 <body>
   <main class="page">
@@ -29,6 +29,15 @@
       <div class="company-info"></div>
     </section>
 
+    <section class="stock-section glass-card">
+      <h2 class="section-title">Buy</h2>
+      <div class="buy-row">
+        <input type="number" id="buy-shares" class="buy-input" placeholder="Number of shares" min="0" step="any" />
+        <button class="glass-btn" id="buy-btn">Buy</button>
+      </div>
+      <p id="buy-feedback" class="buy-feedback"></p>
+    </section>
+
     <div class="stock-actions">
       <button class="glass-btn" id="watchlist-btn">Add to Watchlist</button>
     </div>
@@ -39,7 +48,7 @@
   <script src="../js/config.js"></script>
   <script src="../js/api.js"></script>
   <script src="../components/error-message.js"></script>
-  <script src="../js/stock-details.js?v=2"></script>
+  <script src="../js/stock-details.js?v=3"></script>
   <script src="../js/chart.js"></script>
 </body>
 </html>

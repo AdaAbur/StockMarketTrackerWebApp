@@ -99,4 +99,44 @@ document.addEventListener("DOMContentLoaded", async () => {
       updateButton();
     });
   }
+
+  const buyShares = document.querySelector("#buy-shares");
+  const buyBtn = document.querySelector("#buy-btn");
+  const buyFeedback = document.querySelector("#buy-feedback");
+  const currencyChar = stock.price.charAt(0);
+  const priceNumber = parseFloat(stock.price.replace(/[^0-9.]/g, ""));
+  let awaitingConfirm = false;
+
+  buyBtn.addEventListener("click", () => {
+    const shares = parseFloat(buyShares.value);
+
+    if (isNaN(shares) || shares <= 0) {
+      buyFeedback.textContent = "Please enter a number of shares greater than 0.";
+      buyFeedback.className = "buy-feedback text-loss";
+      awaitingConfirm = false;
+      buyBtn.textContent = "Buy";
+      return;
+    }
+
+    if (!awaitingConfirm) {
+      const total = (shares * priceNumber).toFixed(2);
+      buyFeedback.textContent =
+        "Buy " + shares + " shares of " + stock.symbol + " at " + stock.price +
+        " for " + currencyChar + total + "? Click Confirm.";
+      buyFeedback.className = "buy-feedback";
+      buyBtn.textContent = "Confirm";
+      awaitingConfirm = true;
+      return;
+    }
+
+    const holdings = JSON.parse(localStorage.getItem("holdings") || "[]");
+    holdings.push({ symbol: stock.symbol, shares: shares, price: priceNumber });
+    localStorage.setItem("holdings", JSON.stringify(holdings));
+
+    buyFeedback.textContent = "Bought " + shares + " shares of " + stock.symbol + ".";
+    buyFeedback.className = "buy-feedback text-gain";
+    buyBtn.textContent = "Buy";
+    buyShares.value = "";
+    awaitingConfirm = false;
+  });
 });
