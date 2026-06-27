@@ -17,6 +17,24 @@ function applyTheme(theme) {
   }
 }
 
+function logout() {
+  const email = localStorage.getItem("userEmail");
+  if (email) {
+    const data = {
+      watchlist: JSON.parse(localStorage.getItem("watchlist") || "[]"),
+      holdings: JSON.parse(localStorage.getItem("holdings") || "[]"),
+      name: localStorage.getItem("userName") || ""
+    };
+    localStorage.setItem("account_" + email, JSON.stringify(data));
+  }
+  localStorage.removeItem("watchlist");
+  localStorage.removeItem("holdings");
+  localStorage.removeItem("userName");
+  localStorage.removeItem("loggedIn");
+  localStorage.removeItem("userEmail");
+  window.location.href = "login.html";
+}
+
 function createNavbar() {
   const nav = document.createElement("nav");
   nav.className = "navbar";
@@ -41,6 +59,12 @@ function createNavbar() {
     link.className = "navbar-link";
     link.href = item.href;
     link.textContent = item.label;
+    if (item.label === "Logout") {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        logout();
+      });
+    }
     if (item.href === currentPage) {
       link.classList.add("navbar-link-active");
     }

@@ -24,8 +24,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    const account = JSON.parse(localStorage.getItem("account_" + emailValue) || "{}");
     localStorage.setItem("loggedIn", "true");
     localStorage.setItem("userEmail", emailValue);
+    localStorage.setItem("userName", account.name || "");
+    localStorage.setItem("watchlist", JSON.stringify(account.watchlist || []));
+    localStorage.setItem("holdings", JSON.stringify(account.holdings || []));
     window.location.href = "dashboard.html";
   });
 });

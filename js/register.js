@@ -33,9 +33,17 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    const account = JSON.parse(localStorage.getItem("account_" + emailValue) || "{}");
     localStorage.setItem("loggedIn", "true");
     localStorage.setItem("userName", nameValue);
     localStorage.setItem("userEmail", emailValue);
+    localStorage.setItem("watchlist", JSON.stringify(account.watchlist || []));
+    localStorage.setItem("holdings", JSON.stringify(account.holdings || []));
+    localStorage.setItem("account_" + emailValue, JSON.stringify({
+      name: nameValue,
+      watchlist: account.watchlist || [],
+      holdings: account.holdings || []
+    }));
     window.location.href = "dashboard.html";
   });
 });
