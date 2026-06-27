@@ -76,6 +76,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  const isLoggedIn = () => localStorage.getItem("loggedIn") === "true";
+
   const watchlistBtn = document.querySelector("#watchlist-btn");
   if (watchlistBtn) {
     const getWatchlist = () =>
@@ -89,6 +91,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     updateButton();
 
     watchlistBtn.addEventListener("click", () => {
+      if (!isLoggedIn()) {
+        window.location.href = "login.html";
+        return;
+      }
       let list = getWatchlist();
       if (list.includes(stock.symbol)) {
         list = list.filter((item) => item !== stock.symbol);
@@ -108,7 +114,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let awaitingConfirm = false;
 
   buyBtn.addEventListener("click", () => {
-    if (localStorage.getItem("loggedIn") !== "true") {
+    if (!isLoggedIn()) {
       window.location.href = "login.html";
       return;
     }
