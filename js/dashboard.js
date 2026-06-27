@@ -102,11 +102,19 @@ function loadLocation() {
   });
 }
 
+function loadGreeting() {
+  const greeting = document.querySelector("#dashboard-greeting");
+  if (!greeting) return;
+  const name = localStorage.getItem("userName");
+  greeting.textContent = name ? "Welcome Back, " + name : "Welcome Back";
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const summaryContainer = document.querySelector(".summary-cards");
   const watchlistContainer = document.querySelector(".watchlist-preview");
   const overviewContainer = document.querySelector(".stock-overview");
 
+  loadGreeting();
   loadLocation();
   loadOverview(overviewContainer, summaryContainer);
   renderWatchlist(watchlistContainer);
