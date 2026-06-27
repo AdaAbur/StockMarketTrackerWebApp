@@ -96,6 +96,22 @@
   padding: 1rem 1.25rem;
 }
 
+.stock-row-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.stock-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #ffffff;
+  padding: 3px;
+  flex-shrink: 0;
+}
+
 .stock-row-main {
   display: flex;
   flex-direction: column;

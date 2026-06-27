@@ -3,6 +3,17 @@ function createStockRow({ symbol, name, price, change, trend, href }) {
   row.className = "stock-row";
   if (href) row.href = href;
 
+  const left = document.createElement("span");
+  left.className = "stock-row-left";
+
+  const logo = document.createElement("img");
+  logo.className = "stock-logo";
+  logo.src = "https://financialmodelingprep.com/image-stock/" + symbol + ".png";
+  logo.alt = "";
+  logo.addEventListener("error", () => {
+    logo.style.display = "none";
+  });
+
   const main = document.createElement("span");
   main.className = "stock-row-main";
 
@@ -16,6 +27,9 @@ function createStockRow({ symbol, name, price, change, trend, href }) {
 
   main.appendChild(symbolEl);
   main.appendChild(nameEl);
+
+  left.appendChild(logo);
+  left.appendChild(main);
 
   const end = document.createElement("span");
   end.className = "stock-row-end";
@@ -32,7 +46,7 @@ function createStockRow({ symbol, name, price, change, trend, href }) {
     end.appendChild(changeEl);
   }
 
-  row.appendChild(main);
+  row.appendChild(left);
   row.appendChild(end);
   return row;
 }
