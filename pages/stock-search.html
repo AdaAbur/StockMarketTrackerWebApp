@@ -5,16 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tradeon - Stock Search</title>
   <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/stock-search.css?v=2" />
+  <link rel="stylesheet" href="../css/stock-search.css?v=3" />
 </head>
 <body>
   <main class="page">
-    <h1>Stocks</h1>
-    <input type="text" id="stock-search-input" class="search-bar" placeholder="Search stocks..." />
-    <div class="country-dropdown" id="country-dropdown">
-      <button type="button" class="country-toggle" id="country-toggle">All countries</button>
-      <div class="country-menu" id="country-menu"></div>
+    <div class="search-header">
+      <h1>Stocks</h1>
+      <div class="country-dropdown" id="country-dropdown">
+        <button type="button" class="country-toggle" id="country-toggle">All countries</button>
+        <div class="country-menu" id="country-menu"></div>
+      </div>
     </div>
+    <input type="text" id="stock-search-input" class="search-bar" placeholder="Search stocks..." />
     <div class="stock-results"></div>
   </main>
 
