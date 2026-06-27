@@ -1,3 +1,14 @@
+const defaultStocks = [
+  { symbol: "AAPL", name: "Apple Inc." },
+  { symbol: "AMZN", name: "Amazon.com Inc." },
+  { symbol: "GOOGL", name: "Alphabet Inc." },
+  { symbol: "META", name: "Meta Platforms Inc." },
+  { symbol: "MSFT", name: "Microsoft Corp." },
+  { symbol: "NFLX", name: "Netflix Inc." },
+  { symbol: "NVDA", name: "NVIDIA Corp." },
+  { symbol: "TSLA", name: "Tesla Inc." }
+];
+
 const countries = [
   { value: "", label: "All countries" },
   { value: "United States", label: "United States" },
@@ -40,6 +51,58 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
+  const sortBySymbol = (list) =>
+    list.slice().sort((a, b) => a.symbol.localeCompare(b.symbol));
+
+  const dedupe = (list) => {
+    const seen = {};
+    return list.filter((item) => {
+      if (seen[item.symbol]) return false;
+      seen[item.symbol] = true;
+      return true;
+    });
+  };
+
+  const fetchStocksByCountry = async (country) => {
+    const url = new URL(API_CONFIG.baseUrl + "/stocks");
+    if (country) url.searchParams.append("country", country);
+    url.searchParams.append("apikey", API_CONFIG.apiKey);
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Network error. Please try again.");
+    }
+    const data = await response.json();
+    if (data.status === "error") {
+      throw new Error(data.message || "Could not load stocks.");
+    }
+    return (data.data || []).map((item) => ({
+      symbol: item.symbol,
+      name: item.name,
+      country: item.country || ""
+    }));
+  };
+
+  const loadDefaultList = async () => {
+    if (!selectedCountry) {
+      render(sortBySymbol(defaultStocks));
+      return;
+    }
+    setMessage("Loading stocks...");
+    try {
+      const list = await fetchStocksByCountry(selectedCountry);
+      const cleaned = dedupe(sortBySymbol(list)).slice(0, 30);
+      if (cleaned.length === 0) {
+        setMessage("No stocks found.");
+        return;
+      }
+      render(cleaned);
+    } catch (error) {
+      results.innerHTML = "";
+      results.appendChild(createErrorMessage(error.message, loadDefaultList));
+    }
+  };
+
   const search = async (query) => {
     setMessage("Searching...");
     try {
@@ -51,20 +114,20 @@ document.addEventListener("DOMContentLoaded", () => {
         setMessage("No stocks found.");
         return;
       }
-      render(filtered.slice(0, 20));
+      render(dedupe(filtered).slice(0, 20));
     } catch (error) {
       results.innerHTML = "";
       results.appendChild(createErrorMessage(error.message, () => search(query)));
     }
   };
 
-  const triggerSearch = () => {
+  const refresh = () => {
     const query = input.value.trim();
     if (query === "") {
-      results.innerHTML = "";
-      return;
+      loadDefaultList();
+    } else {
+      search(query);
     }
-    search(query);
   };
 
   countries.forEach((country) => {
@@ -78,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
       menu.querySelectorAll(".country-option").forEach((el) => el.classList.remove("country-option-active"));
       option.classList.add("country-option-active");
       menu.classList.remove("open");
-      triggerSearch();
+      refresh();
     });
     menu.appendChild(option);
   });
@@ -95,10 +158,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   input.addEventListener("input", () => {
     clearTimeout(timer);
-    if (input.value.trim() === "") {
-      results.innerHTML = "";
+    const query = input.value.trim();
+    if (query === "") {
+      loadDefaultList();
       return;
     }
-    timer = setTimeout(triggerSearch, 400);
+    timer = setTimeout(() => search(query), 400);
   });
+
+  loadDefaultList();
 });
