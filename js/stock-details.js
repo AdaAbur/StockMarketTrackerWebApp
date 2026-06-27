@@ -15,14 +15,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     stock = await fetchQuote(symbol);
   } catch (error) {
     header.innerHTML = "";
-    const errorEl = document.createElement("p");
-    errorEl.className = "stock-detail-name";
-    errorEl.textContent = error.message;
-    header.appendChild(errorEl);
+    header.appendChild(createErrorMessage(error.message, () => window.location.reload()));
     return;
   }
 
   header.innerHTML = "";
+
+  const logo = document.createElement("img");
+  logo.className = "stock-detail-logo";
+  logo.src = "https://financialmodelingprep.com/image-stock/" + stock.symbol + ".png";
+  logo.alt = "";
+  logo.addEventListener("error", () => {
+    logo.style.display = "none";
+  });
+
+  const info = document.createElement("div");
+  info.className = "stock-detail-info";
 
   const symbolEl = document.createElement("p");
   symbolEl.className = "stock-detail-symbol";
@@ -41,10 +49,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     "stock-detail-change " + (stock.trend === "down" ? "text-loss" : "text-gain");
   changeEl.textContent = stock.change;
 
-  header.appendChild(symbolEl);
-  header.appendChild(nameEl);
-  header.appendChild(priceEl);
-  header.appendChild(changeEl);
+  info.appendChild(symbolEl);
+  info.appendChild(nameEl);
+  info.appendChild(priceEl);
+  info.appendChild(changeEl);
+
+  header.appendChild(logo);
+  header.appendChild(info);
 
   if (companyContainer && stock.details) {
     Object.entries(stock.details).forEach(([label, value]) => {

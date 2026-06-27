@@ -1,5 +1,23 @@
 .stock-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
   margin-bottom: 1.5rem;
+}
+
+.stock-detail-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  object-fit: contain;
+  background: #ffffff;
+  padding: 6px;
+  flex-shrink: 0;
+}
+
+.stock-detail-info {
+  display: flex;
+  flex-direction: column;
 }
 
 .stock-section {
