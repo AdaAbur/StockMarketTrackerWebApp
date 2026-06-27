@@ -57,6 +57,14 @@ document.addEventListener("DOMContentLoaded", () => {
           '<span class="' + plClass + '">P/L: ' + plSign + sym + profitLoss.toFixed(2) + "</span>" +
         "</div>";
 
+      const actions = document.createElement("div");
+      actions.className = "holding-actions";
+
+      const detailsBtn = document.createElement("a");
+      detailsBtn.className = "glass-btn details-btn";
+      detailsBtn.href = "stock-details.html?symbol=" + holding.symbol;
+      detailsBtn.textContent = "Details";
+
       const sellBtn = document.createElement("button");
       sellBtn.className = "glass-btn sell-btn";
       sellBtn.textContent = "Sell";
@@ -66,7 +74,10 @@ document.addEventListener("DOMContentLoaded", () => {
         saveHoldings(list);
         render();
       });
-      card.appendChild(sellBtn);
+
+      actions.appendChild(detailsBtn);
+      actions.appendChild(sellBtn);
+      card.appendChild(actions);
 
       holdingsList.appendChild(card);
     });
