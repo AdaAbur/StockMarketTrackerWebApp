@@ -108,6 +108,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   let awaitingConfirm = false;
 
   buyBtn.addEventListener("click", () => {
+    if (localStorage.getItem("loggedIn") !== "true") {
+      window.location.href = "login.html";
+      return;
+    }
+
     const shares = parseFloat(buyShares.value);
 
     if (isNaN(shares) || shares <= 0) {
