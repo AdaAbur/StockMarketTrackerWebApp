@@ -2,6 +2,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const symbol = params.get("symbol") || "AAPL";
 
+  const backLink = document.querySelector("#go-back");
+  if (backLink) {
+    backLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "dashboard.html";
+      }
+    });
+  }
+
   const header = document.querySelector(".stock-header");
   const companyContainer = document.querySelector(".company-info");
 
