@@ -39,12 +39,27 @@
   top: -0.75rem;
 }
 
+.welcome-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
 .welcome-btn {
   display: inline-block;
-  margin-top: 1.5rem;
   font-size: 1rem;
   padding: 0.8rem 1.9rem;
   white-space: nowrap;
+}
+
+.welcome-btn-signin {
+  background: #0b3d91;
+  border-color: #0b3d91;
+  color: #ffffff;
+}
+
+.welcome-btn-signin:hover {
+  background: #0a347d;
 }
 
 .welcome-news {
