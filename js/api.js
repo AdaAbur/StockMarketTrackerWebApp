@@ -133,18 +133,43 @@ async function fetchTimeSeries(symbol, interval, outputsize) {
 }
 
 async function fetchNews() {
-  const url = API_CONFIG.newsUrl + "/news?category=general&token=" + API_CONFIG.newsKey;
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error("Network error. Please try again.");
-  }
+  const symbols = ["AAPL", "MSFT", "TSLA", "AMZN", "NVDA"];
+  const today = new Date();
+  const weekAgo = new Date();
+  weekAgo.setDate(weekAgo.getDate() - 7);
+  const fmt = (date) => date.toISOString().slice(0, 10);
 
-  const data = await response.json();
-  if (!Array.isArray(data)) {
+  const requests = symbols.map((symbol) =>
+    fetch(
+      API_CONFIG.newsUrl + "/company-news?symbol=" + symbol +
+      "&from=" + fmt(weekAgo) + "&to=" + fmt(today) + "&token=" + API_CONFIG.newsKey
+    )
+      .then((response) => (response.ok ? response.json() : []))
+      .catch(() => [])
+  );
+
+  const results = await Promise.all(requests);
+  const merged = [];
+  results.forEach((list) => {
+    if (Array.isArray(list)) {
+      list.slice(0, 6).forEach((item) => merged.push(item));
+    }
+  });
+
+  if (merged.length === 0) {
     throw new Error("Could not load news.");
   }
 
-  return data.slice(0, 20).map((item) => {
+  merged.sort((a, b) => b.datetime - a.datetime);
+
+  const seen = {};
+  const unique = merged.filter((item) => {
+    if (!item.headline || seen[item.headline]) return false;
+    seen[item.headline] = true;
+    return true;
+  });
+
+  return unique.slice(0, 20).map((item) => {
     const summary = item.summary || "";
     return {
       headline: item.headline,
