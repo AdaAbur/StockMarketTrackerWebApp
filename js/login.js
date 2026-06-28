@@ -42,6 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("userName", account.name || "");
     localStorage.setItem("watchlist", JSON.stringify(account.watchlist || []));
     localStorage.setItem("holdings", JSON.stringify(account.holdings || []));
+    localStorage.setItem("theme", account.theme || "dark");
+    localStorage.setItem("currency", account.currency || "USD");
     window.location.href = "dashboard.html";
   });
 });

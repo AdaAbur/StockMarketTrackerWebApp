@@ -39,10 +39,14 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("userEmail", emailValue);
     localStorage.setItem("watchlist", JSON.stringify(account.watchlist || []));
     localStorage.setItem("holdings", JSON.stringify(account.holdings || []));
+    localStorage.setItem("theme", account.theme || "dark");
+    localStorage.setItem("currency", account.currency || "USD");
     localStorage.setItem("account_" + emailValue, JSON.stringify({
       name: nameValue,
       watchlist: account.watchlist || [],
-      holdings: account.holdings || []
+      holdings: account.holdings || [],
+      theme: account.theme || "dark",
+      currency: account.currency || "USD"
     }));
     window.location.href = "dashboard.html";
   });

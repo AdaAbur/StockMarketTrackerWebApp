@@ -7,7 +7,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const data = {
           watchlist: JSON.parse(localStorage.getItem("watchlist") || "[]"),
           holdings: JSON.parse(localStorage.getItem("holdings") || "[]"),
-          name: localStorage.getItem("userName") || ""
+          name: localStorage.getItem("userName") || "",
+          theme: localStorage.getItem("theme") || "dark",
+          currency: localStorage.getItem("currency") || "USD"
         };
         localStorage.setItem("account_" + email, JSON.stringify(data));
       }
@@ -16,6 +18,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       localStorage.removeItem("userName");
       localStorage.removeItem("loggedIn");
       localStorage.removeItem("userEmail");
+      localStorage.removeItem("theme");
+      localStorage.removeItem("currency");
     });
   }
 

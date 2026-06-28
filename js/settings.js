@@ -1,3 +1,12 @@
+function saveSettingToAccount(key, value) {
+  if (localStorage.getItem("loggedIn") !== "true") return;
+  const email = localStorage.getItem("userEmail");
+  if (!email) return;
+  const account = JSON.parse(localStorage.getItem("account_" + email) || "{}");
+  account[key] = value;
+  localStorage.setItem("account_" + email, JSON.stringify(account));
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const passwordForm = document.querySelector("#password-form");
   const currentPassword = document.querySelector("#current-password");
@@ -33,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   currencySelect.addEventListener("change", async () => {
     setCurrency(currencySelect.value);
+    saveSettingToAccount("currency", currencySelect.value);
     await loadCurrencyRates();
     currencyFeedback.textContent = "Currency updated. Prices will show in " + currencySelect.value + ".";
     currencyFeedback.className = "settings-feedback text-gain";
@@ -42,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
   themeSelect.value = localStorage.getItem("theme") || "dark";
   themeSelect.addEventListener("change", () => {
     localStorage.setItem("theme", themeSelect.value);
+    saveSettingToAccount("theme", themeSelect.value);
     applyTheme(themeSelect.value);
   });
 });

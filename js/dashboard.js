@@ -105,8 +105,12 @@ function loadLocation() {
 function loadGreeting() {
   const greeting = document.querySelector("#dashboard-greeting");
   if (!greeting) return;
-  const name = localStorage.getItem("userName");
-  greeting.textContent = name ? "Welcome Back, " + name : "Welcome Back";
+  if (localStorage.getItem("loggedIn") === "true") {
+    const name = localStorage.getItem("userName");
+    greeting.textContent = name ? "Welcome Back, " + name : "Welcome Back";
+  } else {
+    greeting.textContent = "Welcome";
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {

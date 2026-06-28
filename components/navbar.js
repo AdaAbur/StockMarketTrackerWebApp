@@ -8,7 +8,7 @@ const navLinks = [
   { label: "Settings", href: "settings.html" }
 ];
 
-const protectedPages = ["watchlist.html", "portfolio.html", "profile.html", "settings.html"];
+const protectedPages = ["watchlist.html", "portfolio.html", "profile.html"];
 
 function applyTheme(theme) {
   if (theme === "light") {
@@ -28,7 +28,9 @@ function logout() {
     const data = {
       watchlist: JSON.parse(localStorage.getItem("watchlist") || "[]"),
       holdings: JSON.parse(localStorage.getItem("holdings") || "[]"),
-      name: localStorage.getItem("userName") || ""
+      name: localStorage.getItem("userName") || "",
+      theme: localStorage.getItem("theme") || "dark",
+      currency: localStorage.getItem("currency") || "USD"
     };
     localStorage.setItem("account_" + email, JSON.stringify(data));
   }
@@ -37,6 +39,8 @@ function logout() {
   localStorage.removeItem("userName");
   localStorage.removeItem("loggedIn");
   localStorage.removeItem("userEmail");
+  localStorage.removeItem("theme");
+  localStorage.removeItem("currency");
   sessionStorage.removeItem("enteredApp");
   window.location.href = "../index.html";
 }
