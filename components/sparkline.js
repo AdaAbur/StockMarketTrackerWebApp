@@ -1,10 +1,10 @@
-function createSparkline(symbol) {
+function createSparkline(symbol, width, height) {
   const wrapper = document.createElement("span");
   wrapper.className = "sparkline";
 
   const canvas = document.createElement("canvas");
-  canvas.width = 100;
-  canvas.height = 32;
+  canvas.width = width || 100;
+  canvas.height = height || 32;
   wrapper.appendChild(canvas);
 
   const draw = (series) => {

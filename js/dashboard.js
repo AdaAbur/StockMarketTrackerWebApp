@@ -1,26 +1,58 @@
 const popularStocks = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"];
 
-function renderSummary(container, overview) {
-  const holdings = JSON.parse(localStorage.getItem("holdings") || "[]");
-  const watchlist = JSON.parse(localStorage.getItem("watchlist") || "[]");
+function createMarketCard(stock) {
+  const card = document.createElement("a");
+  card.className = "market-card glass-card";
+  card.href = "stock-details.html?symbol=" + stock.symbol;
 
-  let topValue = "-";
-  let topTrend = "up";
-  if (overview.length > 0) {
-    const best = overview.reduce((a, b) =>
-      parseFloat(b.change) > parseFloat(a.change) ? b : a
-    );
-    topValue = best.symbol + " " + best.change;
-    topTrend = best.trend;
-  }
+  const top = document.createElement("div");
+  top.className = "market-card-top";
 
-  container.innerHTML = "";
-  container.appendChild(createStatCard({ label: "Holdings", value: String(holdings.length) }));
-  container.appendChild(createStatCard({ label: "Watchlist", value: String(watchlist.length) }));
-  container.appendChild(createStatCard({ label: "Top Performer", value: topValue, trend: topTrend }));
+  const info = document.createElement("div");
+  info.className = "market-card-info";
+
+  const logo = document.createElement("img");
+  logo.className = "market-logo";
+  logo.src = "https://financialmodelingprep.com/image-stock/" + stock.symbol + ".png";
+  logo.alt = "";
+  logo.addEventListener("error", () => {
+    logo.style.display = "none";
+  });
+
+  const text = document.createElement("div");
+  text.className = "market-card-text";
+
+  const symbolEl = document.createElement("span");
+  symbolEl.className = "market-symbol";
+  symbolEl.textContent = stock.symbol;
+
+  const changeEl = document.createElement("span");
+  changeEl.className = "market-change " + (stock.trend === "down" ? "text-loss" : "text-gain");
+  changeEl.textContent = stock.change;
+
+  text.appendChild(symbolEl);
+  text.appendChild(changeEl);
+
+  info.appendChild(logo);
+  info.appendChild(text);
+
+  const priceEl = document.createElement("span");
+  priceEl.className = "market-price";
+  priceEl.textContent = stock.price;
+
+  top.appendChild(info);
+  top.appendChild(priceEl);
+
+  const chart = document.createElement("div");
+  chart.className = "market-card-chart";
+  chart.appendChild(createSparkline(stock.symbol, 260, 70));
+
+  card.appendChild(top);
+  card.appendChild(chart);
+  return card;
 }
 
-async function loadOverview(container, summaryContainer) {
+async function loadMarketOverview(container) {
   container.innerHTML = "";
   const loading = document.createElement("p");
   loading.className = "watchlist-empty";
@@ -31,17 +63,58 @@ async function loadOverview(container, summaryContainer) {
     const overview = await fetchQuotes(popularStocks);
     container.innerHTML = "";
     overview.forEach((stock) => {
-      const row = createStockRow({ ...stock, href: "stock-details.html?symbol=" + stock.symbol });
-      row.insertBefore(createSparkline(stock.symbol), row.lastChild);
-      container.appendChild(row);
+      container.appendChild(createMarketCard(stock));
     });
-    renderSummary(summaryContainer, overview);
   } catch (error) {
     container.innerHTML = "";
-    container.appendChild(
-      createErrorMessage(error.message, () => loadOverview(container, summaryContainer))
-    );
-    renderSummary(summaryContainer, []);
+    container.appendChild(createErrorMessage(error.message, () => loadMarketOverview(container)));
+  }
+}
+
+async function loadDashboardNews(container) {
+  container.innerHTML = "";
+  const loading = document.createElement("p");
+  loading.className = "watchlist-empty";
+  loading.textContent = "Loading news...";
+  container.appendChild(loading);
+
+  try {
+    const items = await fetchNews();
+    container.innerHTML = "";
+    items.slice(0, 6).forEach((item) => {
+      const card = document.createElement("a");
+      card.className = "dashboard-news-item";
+      card.href = item.url;
+      card.target = "_blank";
+      card.rel = "noopener";
+
+      if (item.image) {
+        const thumb = document.createElement("img");
+        thumb.className = "dashboard-news-thumb";
+        thumb.src = item.image;
+        thumb.alt = "";
+        card.appendChild(thumb);
+      }
+
+      const body = document.createElement("div");
+      body.className = "dashboard-news-body";
+
+      const headline = document.createElement("p");
+      headline.className = "dashboard-news-headline";
+      headline.textContent = item.headline;
+
+      const source = document.createElement("span");
+      source.className = "dashboard-news-source";
+      source.textContent = item.source;
+
+      body.appendChild(headline);
+      body.appendChild(source);
+      card.appendChild(body);
+      container.appendChild(card);
+    });
+  } catch (error) {
+    container.innerHTML = "";
+    container.appendChild(createErrorMessage(error.message, () => loadDashboardNews(container)));
   }
 }
 
@@ -116,12 +189,13 @@ function loadGreeting() {
 document.addEventListener("DOMContentLoaded", () => {
   sessionStorage.setItem("enteredApp", "true");
 
-  const summaryContainer = document.querySelector(".summary-cards");
   const watchlistContainer = document.querySelector(".watchlist-preview");
-  const overviewContainer = document.querySelector(".stock-overview");
+  const marketContainer = document.querySelector(".market-overview");
+  const newsContainer = document.querySelector(".dashboard-news");
 
   loadGreeting();
   loadLocation();
-  loadOverview(overviewContainer, summaryContainer);
   renderWatchlist(watchlistContainer);
+  loadMarketOverview(marketContainer);
+  loadDashboardNews(newsContainer);
 });
