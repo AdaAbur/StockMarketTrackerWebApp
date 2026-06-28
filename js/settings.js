@@ -8,6 +8,13 @@ function saveSettingToAccount(key, value) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const loggedIn = localStorage.getItem("loggedIn") === "true";
+
+  const passwordSection = document.querySelector("#password-section");
+  if (!loggedIn && passwordSection) {
+    passwordSection.style.display = "none";
+  }
+
   const passwordForm = document.querySelector("#password-form");
   const currentPassword = document.querySelector("#current-password");
   const newPassword = document.querySelector("#new-password");
