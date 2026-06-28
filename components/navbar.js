@@ -37,7 +37,8 @@ function logout() {
   localStorage.removeItem("userName");
   localStorage.removeItem("loggedIn");
   localStorage.removeItem("userEmail");
-  window.location.href = "login.html";
+  sessionStorage.removeItem("enteredApp");
+  window.location.href = "../index.html";
 }
 
 function createNavbar() {

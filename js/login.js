@@ -3,6 +3,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const email = document.querySelector("#email");
   const password = document.querySelector("#password");
 
+  const back = document.querySelector("#auth-back");
+  if (back) {
+    back.addEventListener("click", (event) => {
+      event.preventDefault();
+      if (sessionStorage.getItem("enteredApp") === "true") {
+        window.location.href = "dashboard.html";
+      } else {
+        window.location.href = "../index.html";
+      }
+    });
+  }
+
   const feedback = document.createElement("p");
   feedback.className = "auth-feedback";
   form.appendChild(feedback);

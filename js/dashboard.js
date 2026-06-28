@@ -110,6 +110,8 @@ function loadGreeting() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  sessionStorage.setItem("enteredApp", "true");
+
   const summaryContainer = document.querySelector(".summary-cards");
   const watchlistContainer = document.querySelector(".watchlist-preview");
   const overviewContainer = document.querySelector(".stock-overview");
