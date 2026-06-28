@@ -103,3 +103,26 @@
   color: var(--text-primary);
   background: rgba(0, 128, 255, 0.15);
 }
+
+body.light .settings-select {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+body.light .settings-menu {
+  background: linear-gradient(135deg, rgba(248, 249, 251, 0.98), rgba(228, 231, 236, 0.98));
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+body.light .settings-option {
+  color: #243044;
+}
+
+body.light .settings-option:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: #0b1220;
+}
+
+body.light .settings-option-active {
+  color: #0b1220;
+  background: rgba(0, 128, 255, 0.18);
+}

@@ -26,6 +26,15 @@ body {
   line-height: 1.6;
 }
 
+body.light {
+  background-image: radial-gradient(
+    circle at 50% 0%,
+    #cdd1d7 0%,
+    #c0c4cb 45%,
+    #d4d7dc 75%
+  );
+}
+
 h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; }
 h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; }
 h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
