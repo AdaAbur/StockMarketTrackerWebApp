@@ -22,6 +22,11 @@ document.addEventListener("DOMContentLoaded", () => {
     profileFeedback.className = "settings-feedback text-gain";
   });
 
+  const logoutBtn = document.querySelector("#logout-btn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => logout());
+  }
+
   const proFeedback = document.querySelector("#pro-feedback");
   const proBtn = document.querySelector("#pro-buy");
   const eliteBtn = document.querySelector("#elite-buy");

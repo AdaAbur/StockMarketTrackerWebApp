@@ -5,8 +5,7 @@ const navLinks = [
   { label: "Watchlist", href: "watchlist.html" },
   { label: "Portfolio", href: "portfolio.html" },
   { label: "Profile", href: "profile.html" },
-  { label: "Settings", href: "settings.html" },
-  { label: "Logout", href: "#" }
+  { label: "Settings", href: "settings.html" }
 ];
 
 const protectedPages = ["watchlist.html", "portfolio.html", "profile.html", "settings.html"];
@@ -66,12 +65,7 @@ function createNavbar() {
     link.href = item.href;
     link.textContent = item.label;
 
-    if (item.label === "Logout") {
-      link.addEventListener("click", (event) => {
-        event.preventDefault();
-        logout();
-      });
-    } else if (protectedPages.includes(item.href)) {
+    if (protectedPages.includes(item.href)) {
       link.addEventListener("click", (event) => {
         if (!isLoggedIn()) {
           event.preventDefault();

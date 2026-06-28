@@ -1,4 +1,24 @@
 document.addEventListener("DOMContentLoaded", async () => {
+  const guestBtn = document.querySelector("#guest-btn");
+  if (guestBtn) {
+    guestBtn.addEventListener("click", () => {
+      const email = localStorage.getItem("userEmail");
+      if (email) {
+        const data = {
+          watchlist: JSON.parse(localStorage.getItem("watchlist") || "[]"),
+          holdings: JSON.parse(localStorage.getItem("holdings") || "[]"),
+          name: localStorage.getItem("userName") || ""
+        };
+        localStorage.setItem("account_" + email, JSON.stringify(data));
+      }
+      localStorage.removeItem("watchlist");
+      localStorage.removeItem("holdings");
+      localStorage.removeItem("userName");
+      localStorage.removeItem("loggedIn");
+      localStorage.removeItem("userEmail");
+    });
+  }
+
   const container = document.querySelector(".welcome-news-list");
   if (!container) return;
 
