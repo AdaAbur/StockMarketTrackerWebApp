@@ -14,12 +14,12 @@
       <h1 class="auth-title">Welcome back</h1>
       <p class="auth-subtitle">Log in to your account</p>
 
-      <form id="login-form" class="auth-form">
+      <form id="login-form" class="auth-form" autocomplete="off">
         <label class="auth-label" for="email">Email</label>
-        <input type="email" id="email" class="auth-input" placeholder="you@example.com" />
+        <input type="email" id="email" class="auth-input" placeholder="you@example.com" autocomplete="off" />
 
         <label class="auth-label" for="password">Password</label>
-        <input type="password" id="password" class="auth-input" placeholder="Enter your password" />
+        <input type="password" id="password" class="auth-input" placeholder="Enter your password" autocomplete="new-password" />
 
         <button type="submit" class="glass-btn auth-btn">Log In</button>
       </form>
