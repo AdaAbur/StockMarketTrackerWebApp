@@ -9,12 +9,18 @@ const navLinks = [
   { label: "Logout", href: "#" }
 ];
 
+const protectedPages = ["watchlist.html", "portfolio.html", "settings.html"];
+
 function applyTheme(theme) {
   if (theme === "light") {
     document.body.classList.add("light");
   } else {
     document.body.classList.remove("light");
   }
+}
+
+function isLoggedIn() {
+  return localStorage.getItem("loggedIn") === "true";
 }
 
 function logout() {
@@ -59,12 +65,21 @@ function createNavbar() {
     link.className = "navbar-link";
     link.href = item.href;
     link.textContent = item.label;
+
     if (item.label === "Logout") {
       link.addEventListener("click", (event) => {
         event.preventDefault();
         logout();
       });
+    } else if (protectedPages.includes(item.href)) {
+      link.addEventListener("click", (event) => {
+        if (!isLoggedIn()) {
+          event.preventDefault();
+          window.location.href = "login.html";
+        }
+      });
     }
+
     if (item.href === currentPage) {
       link.classList.add("navbar-link-active");
     }
