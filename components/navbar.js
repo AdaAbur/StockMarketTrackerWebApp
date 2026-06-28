@@ -4,12 +4,12 @@ const navLinks = [
   { label: "News", href: "news.html" },
   { label: "Watchlist", href: "watchlist.html" },
   { label: "Portfolio", href: "portfolio.html" },
-  { label: "Pro", href: "pro.html" },
-  { label: "Profile", href: "settings.html" },
+  { label: "Profile", href: "profile.html" },
+  { label: "Settings", href: "settings.html" },
   { label: "Logout", href: "#" }
 ];
 
-const protectedPages = ["watchlist.html", "portfolio.html", "settings.html"];
+const protectedPages = ["watchlist.html", "portfolio.html", "profile.html", "settings.html"];
 
 function applyTheme(theme) {
   if (theme === "light") {
