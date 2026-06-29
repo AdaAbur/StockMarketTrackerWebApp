@@ -88,6 +88,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  const isLoggedIn = () => localStorage.getItem("loggedIn") === "true";
+
   const feeRate = 0.001;
   const priceRaw = stock.priceRaw || parseFloat(stock.price.replace(/[^0-9.]/g, ""));
 
@@ -181,8 +183,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   qtyInput.addEventListener("input", updateSummary);
 
   tradeBtn.addEventListener("click", async () => {
-    if (!uid) {
+    if (!isLoggedIn()) {
       window.location.href = "login.html";
+      return;
+    }
+    if (!uid) {
+      tradeFeedback.textContent = "Loading account, please try again.";
+      tradeFeedback.className = "buy-feedback";
       return;
     }
     const qty = parseFloat(qtyInput.value);
@@ -267,10 +274,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (watchlistBtn) {
     watchlistBtn.addEventListener("click", async () => {
-      if (!uid) {
+      if (!isLoggedIn()) {
         window.location.href = "login.html";
         return;
       }
+      if (!uid) return;
       watchlistBtn.disabled = true;
       try {
         const inList = await fsIsWatchlisted(uid, stock.symbol);
@@ -290,7 +298,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   loadCurrencyRates().then(updateSummary);
 
   auth.onAuthStateChanged(async (user) => {
-    uid = user ? user.uid : null;
+    uid = (user && isLoggedIn()) ? user.uid : null;
     if (uid) {
       await refreshUserData();
     }
