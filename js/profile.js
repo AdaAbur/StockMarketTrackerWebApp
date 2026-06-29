@@ -1,26 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const profileForm = document.querySelector("#profile-form");
   const profileName = document.querySelector("#profile-name");
   const profileEmail = document.querySelector("#profile-email");
-  const profileFeedback = document.querySelector("#profile-feedback");
 
   profileName.value = localStorage.getItem("userName") || "";
   profileEmail.value = localStorage.getItem("userEmail") || "";
-
-  profileForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const name = profileName.value.trim();
-    const email = profileEmail.value.trim();
-    if (name === "" || email === "") {
-      profileFeedback.textContent = "Please fill in all fields.";
-      profileFeedback.className = "settings-feedback text-loss";
-      return;
-    }
-    localStorage.setItem("userName", name);
-    localStorage.setItem("userEmail", email);
-    profileFeedback.textContent = "Profile saved.";
-    profileFeedback.className = "settings-feedback text-gain";
-  });
 
   const logoutBtn = document.querySelector("#logout-btn");
   if (logoutBtn) {

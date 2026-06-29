@@ -15,16 +15,13 @@
 
     <section class="glass-card settings-section">
       <h2 class="section-title">Account</h2>
-      <form id="profile-form" class="settings-form">
+      <div class="settings-form">
         <label class="settings-label" for="profile-name">Name</label>
-        <input type="text" id="profile-name" class="settings-input" placeholder="Your name" />
+        <input type="text" id="profile-name" class="settings-input" readonly />
 
         <label class="settings-label" for="profile-email">Email</label>
-        <input type="email" id="profile-email" class="settings-input" placeholder="you@example.com" />
-
-        <button type="submit" class="glass-btn settings-btn">Save Profile</button>
-        <p id="profile-feedback" class="settings-feedback"></p>
-      </form>
+        <input type="email" id="profile-email" class="settings-input" readonly />
+      </div>
       <button class="glass-btn settings-btn logout-btn" id="logout-btn">Log Out</button>
     </section>
 
@@ -84,6 +81,6 @@
   </main>
 
   <script src="../components/navbar.js"></script>
-  <script src="../js/profile.js?v=2"></script>
+  <script src="../js/profile.js?v=3"></script>
 </body>
 </html>
