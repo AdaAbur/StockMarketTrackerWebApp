@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const emailValue = email.value.trim();
     const passwordValue = password.value.trim();
@@ -30,20 +30,31 @@ document.addEventListener("DOMContentLoaded", () => {
       feedback.textContent = "Please fill in all fields.";
       return;
     }
-
     if (!isValidEmail(emailValue)) {
       feedback.textContent = "Please enter a valid email address.";
       return;
     }
 
-    const account = JSON.parse(localStorage.getItem("account_" + emailValue) || "{}");
-    localStorage.setItem("loggedIn", "true");
-    localStorage.setItem("userEmail", emailValue);
-    localStorage.setItem("userName", account.name || "");
-    localStorage.setItem("watchlist", JSON.stringify(account.watchlist || []));
-    localStorage.setItem("holdings", JSON.stringify(account.holdings || []));
-    localStorage.setItem("theme", account.theme || "dark");
-    localStorage.setItem("currency", account.currency || "USD");
-    window.location.href = "dashboard.html";
+    feedback.textContent = "Signing in...";
+
+    try {
+      const credential = await auth.signInWithEmailAndPassword(emailValue, passwordValue);
+      const uid = credential.user.uid;
+      const doc = await db.collection("users").doc(uid).get();
+      const data = doc.exists ? doc.data() : {};
+      const fullName = ((data.firstName || "") + " " + (data.surname || "")).trim();
+      const watchlist = Array.isArray(data.watchlist)
+        ? data.watchlist.map((item) => (typeof item === "string" ? item : item.symbol)).filter(Boolean)
+        : [];
+
+      localStorage.setItem("loggedIn", "true");
+      localStorage.setItem("userEmail", emailValue);
+      localStorage.setItem("userName", fullName);
+      localStorage.setItem("watchlist", JSON.stringify(watchlist));
+      localStorage.setItem("holdings", "[]");
+      window.location.href = "dashboard.html";
+    } catch (error) {
+      feedback.textContent = error.message;
+    }
   });
 });
