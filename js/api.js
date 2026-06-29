@@ -85,6 +85,7 @@ async function fetchQuote(symbol) {
   const fiftyTwo = data.fifty_two_week || {};
   return {
     ...normalizeQuote(data),
+    priceRaw: parseFloat(data.close),
     details: {
       Exchange: data.exchange || "-",
       Currency: data.currency || "-",
