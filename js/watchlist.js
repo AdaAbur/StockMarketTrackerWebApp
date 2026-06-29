@@ -1,9 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.querySelector(".watchlist-items");
 
-  const getWatchlist = () => JSON.parse(localStorage.getItem("watchlist") || "[]");
-  const saveWatchlist = (list) => localStorage.setItem("watchlist", JSON.stringify(list));
-
   const showMessage = (text, withLink) => {
     container.innerHTML = "";
     const message = document.createElement("p");
@@ -19,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     container.appendChild(message);
   };
 
-  const createCard = (stock) => {
+  const createCard = (stock, uid) => {
     const card = document.createElement("div");
     card.className = "watchlist-card";
 
@@ -58,12 +55,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const removeBtn = document.createElement("button");
     removeBtn.className = "remove-btn";
     removeBtn.textContent = "Remove";
-    removeBtn.addEventListener("click", () => {
-      const list = getWatchlist().filter((item) => item !== stock.symbol);
-      saveWatchlist(list);
-      card.remove();
-      if (list.length === 0) {
-        showMessage("Your watchlist is empty.", true);
+    removeBtn.addEventListener("click", async () => {
+      removeBtn.disabled = true;
+      try {
+        await fsRemoveFromWatchlist(uid, stock.symbol);
+        card.remove();
+        if (!container.querySelector(".watchlist-card")) {
+          showMessage("Your watchlist is empty.", true);
+        }
+      } catch (error) {
+        removeBtn.disabled = false;
       }
     });
 
@@ -75,23 +76,38 @@ document.addEventListener("DOMContentLoaded", () => {
     return card;
   };
 
-  const load = async () => {
-    const symbols = getWatchlist();
+  const load = async (uid) => {
+    showMessage("Loading...", false);
+
+    let symbols;
+    try {
+      symbols = await fsGetWatchlist(uid);
+    } catch (error) {
+      container.innerHTML = "";
+      container.appendChild(createErrorMessage(error.message, () => load(uid)));
+      return;
+    }
+
     if (symbols.length === 0) {
       showMessage("Your watchlist is empty.", true);
       return;
     }
 
-    showMessage("Loading...", false);
     try {
       const stocks = await fetchQuotes(symbols);
       container.innerHTML = "";
-      stocks.forEach((stock) => container.appendChild(createCard(stock)));
+      stocks.forEach((stock) => container.appendChild(createCard(stock, uid)));
     } catch (error) {
       container.innerHTML = "";
-      container.appendChild(createErrorMessage(error.message, load));
+      container.appendChild(createErrorMessage(error.message, () => load(uid)));
     }
   };
 
-  load();
+  auth.onAuthStateChanged((user) => {
+    if (!user) {
+      window.location.href = "login.html";
+      return;
+    }
+    load(user.uid);
+  });
 });

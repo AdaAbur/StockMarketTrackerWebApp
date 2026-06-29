@@ -92,29 +92,39 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const watchlistBtn = document.querySelector("#watchlist-btn");
   if (watchlistBtn) {
-    const getWatchlist = () =>
-      JSON.parse(localStorage.getItem("watchlist") || "[]");
+    let currentUid = null;
 
-    const updateButton = () => {
-      const saved = getWatchlist().includes(stock.symbol);
-      watchlistBtn.textContent = saved ? "Remove from Watchlist" : "Add to Watchlist";
+    const updateButton = async () => {
+      if (!currentUid) {
+        watchlistBtn.textContent = "Add to Watchlist";
+        return;
+      }
+      const inList = await fsIsWatchlisted(currentUid, stock.symbol);
+      watchlistBtn.textContent = inList ? "Remove from Watchlist" : "Add to Watchlist";
     };
 
-    updateButton();
+    auth.onAuthStateChanged((user) => {
+      currentUid = user ? user.uid : null;
+      updateButton();
+    });
 
-    watchlistBtn.addEventListener("click", () => {
-      if (!isLoggedIn()) {
+    watchlistBtn.addEventListener("click", async () => {
+      if (!currentUid) {
         window.location.href = "login.html";
         return;
       }
-      let list = getWatchlist();
-      if (list.includes(stock.symbol)) {
-        list = list.filter((item) => item !== stock.symbol);
-      } else {
-        list.push(stock.symbol);
+      watchlistBtn.disabled = true;
+      try {
+        const inList = await fsIsWatchlisted(currentUid, stock.symbol);
+        if (inList) {
+          await fsRemoveFromWatchlist(currentUid, stock.symbol);
+        } else {
+          await fsAddToWatchlist(currentUid, stock.symbol);
+        }
+        await updateButton();
+      } finally {
+        watchlistBtn.disabled = false;
       }
-      localStorage.setItem("watchlist", JSON.stringify(list));
-      updateButton();
     });
   }
 
