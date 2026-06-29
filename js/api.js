@@ -75,6 +75,7 @@ function normalizeQuote(item) {
     symbol: item.symbol,
     name: item.name,
     price: formatMoney(item.close),
+    priceRaw: parseFloat(item.close),
     change: (change >= 0 ? "+" : "") + change.toFixed(2) + "%",
     trend: change >= 0 ? "up" : "down"
   };
@@ -85,7 +86,6 @@ async function fetchQuote(symbol) {
   const fiftyTwo = data.fifty_two_week || {};
   return {
     ...normalizeQuote(data),
-    priceRaw: parseFloat(data.close),
     details: {
       Exchange: data.exchange || "-",
       Currency: data.currency || "-",
