@@ -23,17 +23,6 @@ function isLoggedIn() {
 }
 
 function logout() {
-  const email = localStorage.getItem("userEmail");
-  if (email) {
-    const data = {
-      watchlist: JSON.parse(localStorage.getItem("watchlist") || "[]"),
-      holdings: JSON.parse(localStorage.getItem("holdings") || "[]"),
-      name: localStorage.getItem("userName") || "",
-      theme: localStorage.getItem("theme") || "dark",
-      currency: localStorage.getItem("currency") || "USD"
-    };
-    localStorage.setItem("account_" + email, JSON.stringify(data));
-  }
   localStorage.removeItem("watchlist");
   localStorage.removeItem("holdings");
   localStorage.removeItem("userName");
@@ -42,7 +31,13 @@ function logout() {
   localStorage.removeItem("theme");
   localStorage.removeItem("currency");
   sessionStorage.removeItem("enteredApp");
-  window.location.href = "../index.html";
+
+  const go = () => { window.location.href = "../index.html"; };
+  if (typeof auth !== "undefined" && auth) {
+    auth.signOut().then(go).catch(go);
+  } else {
+    go();
+  }
 }
 
 function createNavbar() {

@@ -1,18 +1,8 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const guestBtn = document.querySelector("#guest-btn");
   if (guestBtn) {
-    guestBtn.addEventListener("click", () => {
-      const email = localStorage.getItem("userEmail");
-      if (email) {
-        const data = {
-          watchlist: JSON.parse(localStorage.getItem("watchlist") || "[]"),
-          holdings: JSON.parse(localStorage.getItem("holdings") || "[]"),
-          name: localStorage.getItem("userName") || "",
-          theme: localStorage.getItem("theme") || "dark",
-          currency: localStorage.getItem("currency") || "USD"
-        };
-        localStorage.setItem("account_" + email, JSON.stringify(data));
-      }
+    guestBtn.addEventListener("click", (event) => {
+      event.preventDefault();
       localStorage.removeItem("watchlist");
       localStorage.removeItem("holdings");
       localStorage.removeItem("userName");
@@ -20,6 +10,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       localStorage.removeItem("userEmail");
       localStorage.removeItem("theme");
       localStorage.removeItem("currency");
+
+      const go = () => { window.location.href = "pages/dashboard.html"; };
+      if (typeof auth !== "undefined" && auth) {
+        auth.signOut().then(go).catch(go);
+      } else {
+        go();
+      }
     });
   }
 
