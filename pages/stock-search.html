@@ -5,15 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tradeon - Stock Search</title>
   <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/stock-search.css?v=4" />
+  <link rel="stylesheet" href="../css/stock-search.css?v=5" />
 </head>
 <body>
   <main class="page">
     <div class="search-header">
       <h1>Stocks</h1>
-      <div class="country-dropdown" id="country-dropdown">
-        <button type="button" class="country-toggle" id="country-toggle">All countries</button>
-        <div class="country-menu" id="country-menu"></div>
+      <div class="search-controls">
+        <div class="country-dropdown" id="sort-dropdown">
+          <button type="button" class="country-toggle" id="sort-toggle">A–Z</button>
+          <div class="country-menu" id="sort-menu"></div>
+        </div>
+        <div class="country-dropdown" id="country-dropdown">
+          <button type="button" class="country-toggle" id="country-toggle">All countries</button>
+          <div class="country-menu" id="country-menu"></div>
+        </div>
       </div>
     </div>
     <input type="text" id="stock-search-input" class="search-bar" placeholder="Search stocks..." />
@@ -25,6 +31,6 @@
   <script src="../components/error-message.js"></script>
   <script src="../js/config.js"></script>
   <script src="../js/api.js"></script>
-  <script src="../js/stock-search.js?v=4"></script>
+  <script src="../js/stock-search.js?v=5"></script>
 </body>
 </html>

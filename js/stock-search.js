@@ -21,14 +21,24 @@ const countries = [
   { value: "India", label: "India" }
 ];
 
+const sortOptions = [
+  { value: "az", label: "A–Z" },
+  { value: "za", label: "Z–A" },
+  { value: "recent", label: "Recently Viewed" }
+];
+
 document.addEventListener("DOMContentLoaded", () => {
   const input = document.querySelector("#stock-search-input");
   const results = document.querySelector(".stock-results");
   const dropdown = document.querySelector("#country-dropdown");
   const toggle = document.querySelector("#country-toggle");
   const menu = document.querySelector("#country-menu");
+  const sortDropdown = document.querySelector("#sort-dropdown");
+  const sortToggle = document.querySelector("#sort-toggle");
+  const sortMenu = document.querySelector("#sort-menu");
   let timer;
   let selectedCountry = "";
+  let selectedSort = "az";
 
   const setMessage = (text) => {
     results.innerHTML = "";
@@ -38,21 +48,31 @@ document.addEventListener("DOMContentLoaded", () => {
     results.appendChild(message);
   };
 
+  const rememberRecent = (symbol) => {
+    try {
+      const recents = JSON.parse(localStorage.getItem("recentStocks") || "[]").filter((item) => item !== symbol);
+      recents.unshift(symbol);
+      localStorage.setItem("recentStocks", JSON.stringify(recents.slice(0, 20)));
+    } catch (error) {}
+  };
+
   const render = (list) => {
     results.innerHTML = "";
     list.forEach((stock) => {
-      results.appendChild(
-        createStockRow({
-          symbol: stock.symbol,
-          name: stock.name,
-          href: "stock-details.html?symbol=" + stock.symbol
-        })
-      );
+      const row = createStockRow({
+        symbol: stock.symbol,
+        name: stock.name,
+        href: "stock-details.html?symbol=" + stock.symbol
+      });
+      row.addEventListener("click", () => rememberRecent(stock.symbol));
+      results.appendChild(row);
     });
   };
 
-  const sortBySymbol = (list) =>
-    list.slice().sort((a, b) => a.symbol.localeCompare(b.symbol));
+  const sortList = (list) => {
+    const sorted = list.slice().sort((a, b) => a.symbol.localeCompare(b.symbol));
+    return selectedSort === "za" ? sorted.reverse() : sorted;
+  };
 
   const dedupe = (list) => {
     const seen = {};
@@ -85,13 +105,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const loadDefaultList = async () => {
     if (!selectedCountry) {
-      render(sortBySymbol(defaultStocks));
+      render(sortList(defaultStocks));
       return;
     }
     setMessage("Loading stocks...");
     try {
       const list = await fetchStocksByCountry(selectedCountry);
-      const cleaned = dedupe(sortBySymbol(list)).slice(0, 30);
+      const cleaned = sortList(dedupe(list)).slice(0, 30);
       if (cleaned.length === 0) {
         setMessage("No stocks found.");
         return;
@@ -114,20 +134,49 @@ document.addEventListener("DOMContentLoaded", () => {
         setMessage("No stocks found.");
         return;
       }
-      render(dedupe(filtered).slice(0, 20));
+      render(sortList(dedupe(filtered)).slice(0, 20));
     } catch (error) {
       results.innerHTML = "";
       results.appendChild(createErrorMessage(error.message, () => search(query)));
     }
   };
 
+  const loadRecent = async () => {
+    const recents = JSON.parse(localStorage.getItem("recentStocks") || "[]");
+    if (recents.length === 0) {
+      setMessage("No recently viewed stocks yet.");
+      return;
+    }
+    setMessage("Loading...");
+    try {
+      const stocks = await fetchQuotes(recents);
+      const bySymbol = {};
+      stocks.forEach((stock) => {
+        bySymbol[stock.symbol] = stock;
+      });
+      const ordered = recents.map((symbol) => bySymbol[symbol]).filter(Boolean);
+      if (ordered.length === 0) {
+        setMessage("No recently viewed stocks yet.");
+        return;
+      }
+      render(ordered);
+    } catch (error) {
+      results.innerHTML = "";
+      results.appendChild(createErrorMessage(error.message, loadRecent));
+    }
+  };
+
   const refresh = () => {
     const query = input.value.trim();
-    if (query === "") {
-      loadDefaultList();
-    } else {
+    if (query !== "") {
       search(query);
+      return;
     }
+    if (selectedSort === "recent") {
+      loadRecent();
+      return;
+    }
+    loadDefaultList();
   };
 
   countries.forEach((country) => {
@@ -146,13 +195,36 @@ document.addEventListener("DOMContentLoaded", () => {
     menu.appendChild(option);
   });
 
+  sortOptions.forEach((option) => {
+    const el = document.createElement("div");
+    el.className = "country-option";
+    if (option.value === selectedSort) el.classList.add("country-option-active");
+    el.textContent = option.label;
+    el.addEventListener("click", () => {
+      selectedSort = option.value;
+      sortToggle.textContent = option.label;
+      sortMenu.querySelectorAll(".country-option").forEach((x) => x.classList.remove("country-option-active"));
+      el.classList.add("country-option-active");
+      sortMenu.classList.remove("open");
+      refresh();
+    });
+    sortMenu.appendChild(el);
+  });
+
   toggle.addEventListener("click", () => {
     menu.classList.toggle("open");
+  });
+
+  sortToggle.addEventListener("click", () => {
+    sortMenu.classList.toggle("open");
   });
 
   document.addEventListener("click", (event) => {
     if (!dropdown.contains(event.target)) {
       menu.classList.remove("open");
+    }
+    if (!sortDropdown.contains(event.target)) {
+      sortMenu.classList.remove("open");
     }
   });
 
@@ -160,11 +232,11 @@ document.addEventListener("DOMContentLoaded", () => {
     clearTimeout(timer);
     const query = input.value.trim();
     if (query === "") {
-      loadDefaultList();
+      refresh();
       return;
     }
     timer = setTimeout(() => search(query), 400);
   });
 
-  loadDefaultList();
+  refresh();
 });
