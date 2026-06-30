@@ -1,4 +1,4 @@
-const newsSymbols = ["AAPL", "MSFT", "TSLA"];
+const newsSymbols = ["AAPL", "MSFT", "TSLA", "AMZN", "NVDA", "GOOGL", "META", "NFLX"];
 
 function renderTicker(container, stocks) {
   container.innerHTML = "";
