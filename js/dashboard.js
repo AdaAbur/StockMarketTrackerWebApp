@@ -1,83 +1,108 @@
-const popularStocks = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA"];
+const trendingSymbols = ["AAPL", "MSFT", "TSLA", "AMZN", "NVDA", "GOOGL"];
 
-function createMarketCard(stock) {
-  const card = document.createElement("a");
-  card.className = "market-card glass-card";
-  card.href = "stock-details.html?symbol=" + stock.symbol;
+const isLoggedIn = () => localStorage.getItem("loggedIn") === "true";
 
-  const top = document.createElement("div");
-  top.className = "market-card-top";
+function loadGreeting() {
+  const welcomeLabel = document.querySelector(".dashboard-welcome");
+  const greeting = document.querySelector("#dashboard-greeting");
+  if (!greeting) return;
+  if (isLoggedIn()) {
+    const name = localStorage.getItem("userName");
+    if (welcomeLabel) welcomeLabel.style.display = "";
+    greeting.textContent = name ? name : "Welcome Back";
+  } else {
+    if (welcomeLabel) welcomeLabel.style.display = "none";
+    greeting.textContent = "Welcome";
+  }
+}
 
-  const info = document.createElement("div");
-  info.className = "market-card-info";
-
-  const logo = document.createElement("img");
-  logo.className = "market-logo";
-  logo.src = "https://financialmodelingprep.com/image-stock/" + stock.symbol + ".png";
-  logo.alt = "";
-  logo.addEventListener("error", () => {
-    logo.style.display = "none";
+function loadLocation() {
+  const locationEl = document.querySelector("#dashboard-location");
+  if (!locationEl) return;
+  detectLocation((result) => {
+    if (result && result.country) {
+      const place = result.city ? result.city + ", " + result.country : result.country;
+      locationEl.textContent = "Markets near you: " + place;
+    } else {
+      locationEl.textContent = "Location unavailable";
+    }
   });
+}
 
-  const text = document.createElement("div");
-  text.className = "market-card-text";
+function createTxnCard(tx) {
+  const card = document.createElement("div");
+  card.className = "txn-card";
 
-  const symbolEl = document.createElement("span");
-  symbolEl.className = "market-symbol";
-  symbolEl.textContent = stock.symbol;
+  let dateStr = "";
+  if (tx.createdAt && tx.createdAt.toDate) {
+    dateStr = tx.createdAt.toDate().toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+  }
 
-  const changeEl = document.createElement("span");
-  changeEl.className = "market-change " + (stock.trend === "down" ? "text-loss" : "text-gain");
-  changeEl.textContent = stock.change;
+  const type = document.createElement("span");
+  type.className = "txn-type " + (tx.type === "sell" ? "text-loss" : "text-gain");
+  type.textContent = (tx.type || "").toUpperCase() + " " + tx.symbol;
 
-  text.appendChild(symbolEl);
-  text.appendChild(changeEl);
+  const amount = document.createElement("span");
+  amount.className = "txn-amount";
+  amount.textContent = formatMoney(tx.totalAmount);
 
-  info.appendChild(logo);
-  info.appendChild(text);
+  const meta = document.createElement("span");
+  meta.className = "txn-meta";
+  meta.textContent = tx.quantity + " Shares · @" + formatMoney(tx.price);
 
-  const priceEl = document.createElement("span");
-  priceEl.className = "market-price";
-  priceEl.textContent = stock.price;
+  const date = document.createElement("span");
+  date.className = "txn-date";
+  date.textContent = dateStr;
 
-  top.appendChild(info);
-  top.appendChild(priceEl);
-
-  const chart = document.createElement("div");
-  chart.className = "market-card-chart";
-  chart.appendChild(createSparkline(stock.symbol, 260, 70));
-
-  card.appendChild(top);
-  card.appendChild(chart);
+  card.appendChild(type);
+  card.appendChild(amount);
+  card.appendChild(meta);
+  card.appendChild(date);
   return card;
 }
 
-async function loadMarketOverview(container) {
-  container.innerHTML = "";
-  const loading = document.createElement("p");
-  loading.className = "watchlist-empty";
-  loading.textContent = "Loading...";
-  container.appendChild(loading);
+async function loadRecentTransactions(uid) {
+  const container = document.querySelector("#recent-transactions");
+  if (!container) return;
 
+  if (!uid) {
+    container.innerHTML = '<p class="txn-empty">Sign in to see your transactions. <a href="login.html">Sign in</a></p>';
+    return;
+  }
+
+  container.innerHTML = '<p class="txn-empty">Loading...</p>';
   try {
-    const overview = await fetchQuotes(popularStocks);
+    const txns = await fsGetTransactions(uid);
+    if (!txns.length) {
+      container.innerHTML = '<p class="txn-empty">No transactions yet.</p>';
+      return;
+    }
+    const recent = txns.slice().reverse().slice(0, 10);
     container.innerHTML = "";
-    overview.forEach((stock) => {
-      container.appendChild(createMarketCard(stock));
+    recent.forEach((tx) => container.appendChild(createTxnCard(tx)));
+  } catch (error) {
+    container.innerHTML = '<p class="txn-empty">' + error.message + "</p>";
+  }
+}
+
+async function loadTrendingStocks(container) {
+  if (!container) return;
+  container.innerHTML = '<p class="stocks-loading">Loading...</p>';
+  try {
+    const quotes = await fetchQuotes(trendingSymbols);
+    container.innerHTML = "";
+    quotes.forEach((stock) => {
+      container.appendChild(createStockRow({ ...stock, href: "stock-details.html?symbol=" + stock.symbol }));
     });
   } catch (error) {
     container.innerHTML = "";
-    container.appendChild(createErrorMessage(error.message, () => loadMarketOverview(container)));
+    container.appendChild(createErrorMessage(error.message, () => loadTrendingStocks(container)));
   }
 }
 
 async function loadDashboardNews(container) {
-  container.innerHTML = "";
-  const loading = document.createElement("p");
-  loading.className = "watchlist-empty";
-  loading.textContent = "Loading news...";
-  container.appendChild(loading);
-
+  if (!container) return;
+  container.innerHTML = '<p class="stocks-loading">Loading news...</p>';
   try {
     const items = await fetchNews();
     container.innerHTML = "";
@@ -118,84 +143,17 @@ async function loadDashboardNews(container) {
   }
 }
 
-async function renderWatchlist(container) {
-  const watchlist = JSON.parse(localStorage.getItem("watchlist") || "[]");
-  container.innerHTML = "";
-
-  if (watchlist.length === 0) {
-    const message = document.createElement("p");
-    message.className = "watchlist-empty";
-    message.textContent = "Your watchlist is empty.";
-    container.appendChild(message);
-
-    const link = document.createElement("a");
-    link.href = "stock-search.html";
-    link.className = "watchlist-link";
-    link.textContent = "Find stocks";
-    container.appendChild(link);
-    return;
-  }
-
-  const loading = document.createElement("p");
-  loading.className = "watchlist-empty";
-  loading.textContent = "Loading...";
-  container.appendChild(loading);
-
-  try {
-    const stocks = await fetchQuotes(watchlist.slice(0, 5));
-    container.innerHTML = "";
-    stocks.forEach((stock) => {
-      container.appendChild(
-        createStockRow({ ...stock, href: "stock-details.html?symbol=" + stock.symbol })
-      );
-    });
-
-    const seeAll = document.createElement("a");
-    seeAll.href = "watchlist.html";
-    seeAll.className = "watchlist-link";
-    seeAll.textContent = "See all";
-    container.appendChild(seeAll);
-  } catch (error) {
-    container.innerHTML = "";
-    container.appendChild(createErrorMessage(error.message, () => renderWatchlist(container)));
-  }
-}
-
-function loadLocation() {
-  const locationEl = document.querySelector("#dashboard-location");
-  if (!locationEl) return;
-
-  detectLocation((result) => {
-    if (result && result.country) {
-      const place = result.city ? result.city + ", " + result.country : result.country;
-      locationEl.textContent = "Markets near you: " + place;
-    } else {
-      locationEl.textContent = "Location unavailable";
-    }
-  });
-}
-
-function loadGreeting() {
-  const greeting = document.querySelector("#dashboard-greeting");
-  if (!greeting) return;
-  if (localStorage.getItem("loggedIn") === "true") {
-    const name = localStorage.getItem("userName");
-    greeting.textContent = name ? "Welcome Back, " + name : "Welcome Back";
-  } else {
-    greeting.textContent = "Welcome";
-  }
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   sessionStorage.setItem("enteredApp", "true");
-
-  const watchlistContainer = document.querySelector(".watchlist-preview");
-  const marketContainer = document.querySelector(".market-overview");
-  const newsContainer = document.querySelector(".dashboard-news");
+  loadCurrencyRates();
 
   loadGreeting();
   loadLocation();
-  renderWatchlist(watchlistContainer);
-  loadMarketOverview(marketContainer);
-  loadDashboardNews(newsContainer);
+  loadTrendingStocks(document.querySelector(".trending-stocks"));
+  loadDashboardNews(document.querySelector(".dashboard-news"));
+
+  auth.onAuthStateChanged((user) => {
+    const uid = (user && isLoggedIn()) ? user.uid : null;
+    loadRecentTransactions(uid);
+  });
 });

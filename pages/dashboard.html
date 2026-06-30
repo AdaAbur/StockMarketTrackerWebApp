@@ -5,41 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tradeon - Dashboard</title>
   <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/dashboard.css?v=3" />
+  <link rel="stylesheet" href="../css/dashboard.css?v=4" />
 </head>
 <body>
   <main class="page">
     <header class="dashboard-header">
-      <h1 id="dashboard-greeting">Welcome Back</h1>
+      <p class="dashboard-welcome">Welcome back,</p>
+      <h1 id="dashboard-greeting">Welcome</h1>
       <p class="dashboard-location" id="dashboard-location">Detecting your location...</p>
     </header>
 
     <section class="dashboard-section">
-      <h2 class="section-title">Watchlist</h2>
-      <div class="watchlist-preview glass-card"></div>
+      <div class="section-head">
+        <h2 class="section-title">Recent Transactions</h2>
+      </div>
+      <div class="txn-scroll" id="recent-transactions"></div>
     </section>
 
-    <div class="dashboard-grid">
-      <section class="dashboard-section">
-        <h2 class="section-title">Market Overview</h2>
-        <div class="market-overview"></div>
-      </section>
+    <section class="dashboard-section">
+      <div class="section-head">
+        <h2 class="section-title">Trending Stocks</h2>
+        <a class="see-all" href="stock-search.html">See all</a>
+      </div>
+      <div class="trending-stocks glass-card"></div>
+    </section>
 
-      <section class="dashboard-section">
-        <h2 class="section-title">News</h2>
-        <div class="dashboard-news glass-card"></div>
-      </section>
-    </div>
+    <section class="dashboard-section">
+      <div class="section-head">
+        <h2 class="section-title">Trending News</h2>
+        <a class="see-all" href="news.html">See all</a>
+      </div>
+      <div class="dashboard-news glass-card"></div>
+    </section>
   </main>
 
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="../js/firebase.js"></script>
+  <script src="../js/firestore-data.js"></script>
   <script src="../components/navbar.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
   <script src="../js/config.js"></script>
   <script src="../js/api.js"></script>
   <script src="../js/geo.js"></script>
   <script src="../components/stock-row.js?v=2"></script>
-  <script src="../components/sparkline.js"></script>
   <script src="../components/error-message.js"></script>
-  <script src="../js/dashboard.js?v=4"></script>
+  <script src="../js/dashboard.js?v=5"></script>
 </body>
 </html>
