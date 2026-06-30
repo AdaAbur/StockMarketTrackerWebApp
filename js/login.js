@@ -1,3 +1,23 @@
+function authErrorMessage(error) {
+  const code = error && error.code ? error.code : "";
+  switch (code) {
+    case "auth/invalid-credential":
+    case "auth/wrong-password":
+    case "auth/user-not-found":
+      return "No account found with this email and password.";
+    case "auth/invalid-email":
+      return "Please enter a valid email address.";
+    case "auth/too-many-requests":
+      return "Too many attempts. Please try again later.";
+    case "auth/user-disabled":
+      return "This account has been disabled.";
+    case "auth/network-request-failed":
+      return "Network error. Please check your connection.";
+    default:
+      return error && error.message ? error.message : "Sign in failed.";
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("#login-form");
   const email = document.querySelector("#email");
@@ -54,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("holdings", "[]");
       window.location.href = "dashboard.html";
     } catch (error) {
-      feedback.textContent = error.message;
+      feedback.textContent = authErrorMessage(error);
     }
   });
 });
