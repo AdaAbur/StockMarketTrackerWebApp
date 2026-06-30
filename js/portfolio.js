@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const renderSummary = (cash, holdingsValue, pl) => {
     const total = cash + holdingsValue;
-    const plClass = pl >= 0 ? "text-gain" : "text-loss";
-    const plSign = pl >= 0 ? "+" : "";
+    const plClass = pl > 0 ? "text-gain" : (pl < 0 ? "text-loss" : "");
+    const plSign = pl > 0 ? "+" : "";
     summary.innerHTML =
       '<div class="summary-grid">' +
         '<div><p class="summary-label">Total Value</p><p class="summary-total">' + formatMoney(total) + "</p></div>" +
@@ -110,15 +110,16 @@ document.addEventListener("DOMContentLoaded", () => {
       allocValues.push(value);
 
       const dateStr = buyDates[holding.symbol] ? buyDates[holding.symbol].toLocaleDateString() : "-";
-      const plClass = pl >= 0 ? "text-gain" : "text-loss";
-      const plSign = pl >= 0 ? "+" : "";
+      const currentClass = current > holding.averageBuyPrice ? "text-gain" : (current < holding.averageBuyPrice ? "text-loss" : "");
+      const plClass = pl > 0 ? "text-gain" : (pl < 0 ? "text-loss" : "");
+      const plSign = pl > 0 ? "+" : "";
 
       const row = document.createElement("tr");
       row.innerHTML =
         '<td class="h-symbol">' + holding.symbol + "</td>" +
         "<td>" + holding.quantity + "</td>" +
         "<td>" + formatMoney(holding.averageBuyPrice) + "</td>" +
-        "<td>" + formatMoney(current) + "</td>" +
+        '<td class="' + currentClass + '">' + formatMoney(current) + "</td>" +
         "<td>" + formatMoney(value) + "</td>" +
         '<td class="' + plClass + '">' + plSign + formatMoney(pl) + "</td>" +
         "<td>" + dateStr + "</td>" +
