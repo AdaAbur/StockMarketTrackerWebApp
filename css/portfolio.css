@@ -84,6 +84,16 @@
   padding: 0.5rem 0;
 }
 
+.holdings-table td.text-gain,
+.summary-sub.text-gain {
+  color: var(--color-gain);
+}
+
+.holdings-table td.text-loss,
+.summary-sub.text-loss {
+  color: var(--color-loss);
+}
+
 @media (max-width: 800px) {
   .portfolio-grid {
     grid-template-columns: 1fr;
