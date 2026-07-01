@@ -12,7 +12,7 @@ const chartBackground = {
     if (!area) return;
     const ctx = c.ctx;
     ctx.save();
-    ctx.fillStyle = "#0a1018";
+    ctx.fillStyle = document.body.classList.contains("light") ? "#e9edf2" : "#0a1018";
     ctx.fillRect(area.left, area.top, area.right - area.left, area.bottom - area.top);
     ctx.restore();
   }
@@ -45,6 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const up = series.prices[series.prices.length - 1] >= series.prices[0];
     const color = up ? "#34C759" : "#FF3B30";
     const rgb = up ? "52, 199, 89" : "255, 59, 48";
+    const light = document.body.classList.contains("light");
+    const tickColor = light ? "rgba(0, 0, 0, 0.55)" : "rgba(255, 255, 255, 0.54)";
+    const gridColor = light ? "rgba(0, 0, 0, 0.08)" : "rgba(255, 255, 255, 0.08)";
 
     const height = wrapper.clientHeight || 280;
     const ctx = canvas.getContext("2d");
@@ -74,8 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
         scales: {
           x: { display: false },
           y: {
-            ticks: { color: "rgba(255, 255, 255, 0.54)" },
-            grid: { color: "rgba(255, 255, 255, 0.08)" }
+            ticks: { color: tickColor },
+            grid: { color: gridColor }
           }
         }
       },
