@@ -24,8 +24,13 @@ const countries = [
 const sortOptions = [
   { value: "az", label: "A–Z" },
   { value: "za", label: "Z–A" },
+  { value: "gainers", label: "Top Gainers" },
+  { value: "losers", label: "Top Losers" },
+  { value: "movers", label: "Biggest Movers" },
   { value: "recent", label: "Recently Viewed" }
 ];
+
+const rankedModes = ["gainers", "losers", "movers"];
 
 document.addEventListener("DOMContentLoaded", () => {
   const input = document.querySelector("#stock-search-input");
@@ -62,6 +67,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const row = createStockRow({
         symbol: stock.symbol,
         name: stock.name,
+        price: stock.price || "",
+        change: stock.change,
+        trend: stock.trend,
         href: "stock-details.html?symbol=" + stock.symbol
       });
       row.addEventListener("click", () => rememberRecent(stock.symbol));
@@ -123,21 +131,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  const search = async (query) => {
-    setMessage("Searching...");
+  const loadRanked = async (mode) => {
+    setMessage("Loading...");
     try {
-      const list = await searchSymbols(query);
-      const filtered = selectedCountry
-        ? list.filter((item) => item.country === selectedCountry)
-        : list;
-      if (filtered.length === 0) {
-        setMessage("No stocks found.");
-        return;
+      const quotes = await fetchQuotes(defaultStocks.map((stock) => stock.symbol));
+      const sorted = quotes.slice();
+      if (mode === "gainers") {
+        sorted.sort((a, b) => parseFloat(b.change) - parseFloat(a.change));
+      } else if (mode === "losers") {
+        sorted.sort((a, b) => parseFloat(a.change) - parseFloat(b.change));
+      } else {
+        sorted.sort((a, b) => Math.abs(parseFloat(b.change)) - Math.abs(parseFloat(a.change)));
       }
-      render(sortList(dedupe(filtered)).slice(0, 20));
+      render(sorted);
     } catch (error) {
       results.innerHTML = "";
-      results.appendChild(createErrorMessage(error.message, () => search(query)));
+      results.appendChild(createErrorMessage(error.message, () => loadRanked(mode)));
     }
   };
 
@@ -166,6 +175,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  const search = async (query) => {
+    setMessage("Searching...");
+    try {
+      const list = await searchSymbols(query);
+      const filtered = selectedCountry
+        ? list.filter((item) => item.country === selectedCountry)
+        : list;
+      if (filtered.length === 0) {
+        setMessage("No stocks found.");
+        return;
+      }
+      render(sortList(dedupe(filtered)).slice(0, 20));
+    } catch (error) {
+      results.innerHTML = "";
+      results.appendChild(createErrorMessage(error.message, () => search(query)));
+    }
+  };
+
   const refresh = () => {
     const query = input.value.trim();
     if (query !== "") {
@@ -174,6 +201,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (selectedSort === "recent") {
       loadRecent();
+      return;
+    }
+    if (rankedModes.includes(selectedSort)) {
+      loadRanked(selectedSort);
       return;
     }
     loadDefaultList();

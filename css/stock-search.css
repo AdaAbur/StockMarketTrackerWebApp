@@ -36,6 +36,10 @@
   width: 200px;
 }
 
+#sort-dropdown {
+  width: 160px;
+}
+
 .country-toggle {
   width: 100%;
   text-align: left;
@@ -159,6 +163,9 @@
     width: 100%;
   }
   .country-dropdown {
+    width: 100%;
+  }
+  #sort-dropdown {
     width: 100%;
   }
 }
