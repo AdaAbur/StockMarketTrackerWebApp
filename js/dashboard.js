@@ -1,7 +1,5 @@
 const trendingSymbols = ["AAPL", "MSFT", "TSLA", "AMZN", "NVDA", "GOOGL"];
 
-const isLoggedIn = () => localStorage.getItem("loggedIn") === "true";
-
 function loadGreeting() {
   const welcomeLabel = document.querySelector(".dashboard-welcome");
   const greeting = document.querySelector("#dashboard-greeting");
