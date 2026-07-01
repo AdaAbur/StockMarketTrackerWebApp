@@ -181,3 +181,32 @@ async function fetchNews() {
     };
   });
 }
+
+async function fetchCompanyNews(symbol) {
+  const today = new Date();
+  const weekAgo = new Date();
+  weekAgo.setDate(weekAgo.getDate() - 7);
+  const fmt = (date) => date.toISOString().slice(0, 10);
+
+  const response = await fetch(
+    API_CONFIG.newsUrl + "/company-news?symbol=" + symbol +
+    "&from=" + fmt(weekAgo) + "&to=" + fmt(today) + "&token=" + API_CONFIG.newsKey
+  );
+  if (!response.ok) return [];
+  const list = await response.json();
+  if (!Array.isArray(list)) return [];
+
+  const seen = {};
+  return list
+    .filter((item) => {
+      if (!item.headline || seen[item.headline]) return false;
+      seen[item.headline] = true;
+      return true;
+    })
+    .slice(0, 6)
+    .map((item) => ({
+      headline: item.headline,
+      source: item.source,
+      url: item.url
+    }));
+}
