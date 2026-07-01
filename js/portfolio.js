@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   auth.onAuthStateChanged((user) => {
-    if (!user) {
+    if (!user || !isLoggedIn()) {
       window.location.href = "login.html";
       return;
     }
