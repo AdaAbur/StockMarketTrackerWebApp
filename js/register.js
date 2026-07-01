@@ -1,3 +1,21 @@
+function registerErrorMessage(error) {
+  const code = error && error.code ? error.code : "";
+  switch (code) {
+    case "auth/email-already-in-use":
+      return "An account with this email already exists.";
+    case "auth/invalid-email":
+      return "Please enter a valid email address.";
+    case "auth/weak-password":
+      return "Password should be at least 6 characters.";
+    case "auth/operation-not-allowed":
+      return "Registration is currently unavailable.";
+    case "auth/network-request-failed":
+      return "Network error. Please check your connection.";
+    default:
+      return error && error.message ? error.message : "Registration failed.";
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("#register-form");
   const name = document.querySelector("#name");
@@ -38,6 +56,10 @@ document.addEventListener("DOMContentLoaded", () => {
       feedback.textContent = "Please enter a valid email address.";
       return;
     }
+    if (passwordValue.length < 6) {
+      feedback.textContent = "Password should be at least 6 characters.";
+      return;
+    }
     if (passwordValue !== confirmValue) {
       feedback.textContent = "Passwords do not match.";
       return;
@@ -69,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("holdings", "[]");
       window.location.href = "dashboard.html";
     } catch (error) {
-      feedback.textContent = error.message;
+      feedback.textContent = registerErrorMessage(error);
     }
   });
 });
