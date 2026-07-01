@@ -7,6 +7,25 @@ function saveSettingToAccount(key, value) {
   localStorage.setItem("account_" + email, JSON.stringify(account));
 }
 
+function passwordErrorMessage(error) {
+  const code = error && error.code ? error.code : "";
+  switch (code) {
+    case "auth/invalid-credential":
+    case "auth/wrong-password":
+      return "Current password is incorrect.";
+    case "auth/weak-password":
+      return "New password should be at least 6 characters.";
+    case "auth/too-many-requests":
+      return "Too many attempts. Please try again later.";
+    case "auth/requires-recent-login":
+      return "Please sign in again and retry.";
+    case "auth/network-request-failed":
+      return "Network error. Please check your connection.";
+    default:
+      return error && error.message ? error.message : "Could not update password.";
+  }
+}
+
 function buildDropdown(toggle, menu, options, current, onSelect) {
   const selected = options.find((option) => option.value === current) || options[0];
   toggle.textContent = selected.label;
@@ -45,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmNewPassword = document.querySelector("#confirm-new-password");
   const passwordFeedback = document.querySelector("#password-feedback");
 
-  passwordForm.addEventListener("submit", (event) => {
+  passwordForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const current = currentPassword.value.trim();
     const next = newPassword.value.trim();
@@ -56,14 +75,38 @@ document.addEventListener("DOMContentLoaded", () => {
       passwordFeedback.className = "settings-feedback text-loss";
       return;
     }
+    if (next.length < 6) {
+      passwordFeedback.textContent = "New password should be at least 6 characters.";
+      passwordFeedback.className = "settings-feedback text-loss";
+      return;
+    }
     if (next !== confirm) {
       passwordFeedback.textContent = "New passwords do not match.";
       passwordFeedback.className = "settings-feedback text-loss";
       return;
     }
-    passwordForm.reset();
-    passwordFeedback.textContent = "Password updated.";
-    passwordFeedback.className = "settings-feedback text-gain";
+
+    const user = auth.currentUser;
+    if (!user || !user.email) {
+      passwordFeedback.textContent = "Please sign in again to change your password.";
+      passwordFeedback.className = "settings-feedback text-loss";
+      return;
+    }
+
+    passwordFeedback.textContent = "Updating password...";
+    passwordFeedback.className = "settings-feedback";
+
+    try {
+      const credential = firebase.auth.EmailAuthProvider.credential(user.email, current);
+      await user.reauthenticateWithCredential(credential);
+      await user.updatePassword(next);
+      passwordForm.reset();
+      passwordFeedback.textContent = "Password updated.";
+      passwordFeedback.className = "settings-feedback text-gain";
+    } catch (error) {
+      passwordFeedback.textContent = passwordErrorMessage(error);
+      passwordFeedback.className = "settings-feedback text-loss";
+    }
   });
 
   const currencyToggle = document.querySelector("#currency-toggle");
