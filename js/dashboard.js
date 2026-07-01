@@ -141,9 +141,9 @@ async function loadDashboardNews(container) {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   sessionStorage.setItem("enteredApp", "true");
-  loadCurrencyRates();
+  await loadCurrencyRates();
 
   loadGreeting();
   loadLocation();

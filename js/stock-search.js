@@ -134,7 +134,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const loadRanked = async (mode) => {
     setMessage("Loading...");
     try {
-      const quotes = await fetchQuotes(defaultStocks.map((stock) => stock.symbol));
+      let symbols;
+      if (selectedCountry) {
+        const list = await fetchStocksByCountry(selectedCountry);
+        symbols = dedupe(list).slice(0, 8).map((stock) => stock.symbol);
+      } else {
+        symbols = defaultStocks.map((stock) => stock.symbol);
+      }
+      if (symbols.length === 0) {
+        setMessage("No stocks found.");
+        return;
+      }
+      const quotes = await fetchQuotes(symbols);
       const sorted = quotes.slice();
       if (mode === "gainers") {
         sorted.sort((a, b) => parseFloat(b.change) - parseFloat(a.change));
